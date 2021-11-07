@@ -196,7 +196,7 @@ export default {
             password: password,
             username: username
           })
-          .then(() => this.$router.push({ name: "dashboard" }));
+          .then(() => this.$router.push({ name: "reports" }));
 
         submitButton.classList.remove(
           "spinner",

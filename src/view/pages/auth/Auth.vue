@@ -13,7 +13,7 @@
         <div class="d-flex flex-row-fluid flex-column justify-content-between">
           <!--begin: Aside header -->
           <a href="#" class="flex-column-auto">
-            <img src="/favicon.jpg" class="h-100 w-100" />
+            <img src="/media/Printibe-logo1.png" class="h-100 w-100" />
           </a>
           <!--end: Aside header -->
           <!--begin: Aside content -->
@@ -33,7 +33,7 @@
             class="d-none flex-column-auto d-lg-flex justify-content-between mt-15"
           >
             <div class="opacity-70 font-weight-bold text-white">
-              © 2021 Printribe
+              © {{new Date().getFullYear()}} Printribe
             </div>
             <div class="d-flex">
               <a href="#" class="text-white">Privacy</a>

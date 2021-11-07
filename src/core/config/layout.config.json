@@ -3,10 +3,10 @@
   "self": {
     "layout": "default",
     "logo": {
-      "dark": "media/logos/logo-light.png",
-      "light": "media/logos/logo-dark.png",
-      "brand": "media/logos/logo-light.png",
-      "green": "media/logos/logo-light.png"
+      "dark": "media/Printibe-logo1.png",
+      "light": "media/Printibe-logo1.png",
+      "brand": "media/Printibe-logo1.png",
+      "green": "media/Printibe-logo1.png"
     }
   },
   "loader": {

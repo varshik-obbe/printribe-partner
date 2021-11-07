@@ -3,14 +3,7 @@
   <div class="card card-custom card-stretch gutter-b">
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
-      <h3 class="card-title align-items-start flex-column">
-        <span class="card-label font-weight-bolder text-dark">
-          New Arrivals
-        </span>
-        <span class="text-muted mt-3 font-weight-bold font-size-sm">
-          More than 400+ new members
-        </span>
-      </h3>
+
       <div class="card-toolbar">
         <ul class="nav nav-pills nav-pills-sm nav-dark-75">
           <li class="nav-item">
@@ -54,7 +47,6 @@
               <th class="p-0" style="width: 50px"></th>
               <th class="p-0" style="min-width: 200px"></th>
               <th class="p-0" style="min-width: 100px"></th>
-              <th class="p-0" style="min-width: 125px"></th>
               <th class="p-0" style="min-width: 110px"></th>
               <th class="p-0" style="min-width: 150px"></th>
             </tr>
@@ -98,26 +90,13 @@
                   </span>
                   <span class="text-muted font-weight-bold">Paid</span>
                 </td>
-                <td class="text-right">
-                  <span class="text-muted font-weight-500">
-                    {{ item.text4 }}
-                  </span>
-                </td>
+
                 <td class="text-right">
                   <span class="label label-lg label-light-primary label-inline">
                     {{ item.text5 }}
                   </span>
                 </td>
                 <td class="text-right pr-0">
-                  <a href="#" class="btn btn-icon btn-light btn-sm">
-                    <span class="svg-icon svg-icon-md svg-icon-primary">
-                      <!--begin::Svg Icon-->
-                      <inline-svg
-                        src="media/svg/icons/General/Settings-1.svg"
-                      ></inline-svg>
-                      <!--end::Svg Icon-->
-                    </span>
-                  </a>
                   <a href="#" class="btn btn-icon btn-light btn-sm mx-3">
                     <span class="svg-icon svg-icon-md svg-icon-primary">
                       <!--begin::Svg Icon-->

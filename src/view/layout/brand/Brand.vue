@@ -3,7 +3,7 @@
   <div class="brand flex-column-auto" id="kt_brand" ref="kt_brand">
     <div class="brand-logo">
       <router-link to="/">
-        <img src="/favicon.jpg" alt="Logo" class="logo" />
+        <img src="/media/Printibe-logo1.png" alt="Logo" class="logo" />
       </router-link>
     </div>
     <div class="brand-tools" v-if="allowMinimize">

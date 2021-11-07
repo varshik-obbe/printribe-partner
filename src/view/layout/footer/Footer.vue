@@ -7,17 +7,17 @@
     >
       <div class="text-dark">
         <span class="text-muted font-weight-bold mr-2">
-          2020 &nbsp;&copy;&nbsp;
+          {{new Date().getFullYear()}} &nbsp;&copy;&nbsp;
         </span>
         <a
           href="http://keenthemes.com/metronic"
           target="_blank"
           class="text-dark-75 text-hover-primary"
         >
-          Keenthemes
+          Printribe
         </a>
       </div>
-      <div class="nav nav-dark">
+      <!-- <div class="nav nav-dark">
         <a
           href="http://keenthemes.com/metronic"
           target="_blank"
@@ -39,7 +39,7 @@
         >
           Contact
         </a>
-      </div>
+      </div> -->
     </div>
   </div>
   <!-- end:: Footer -->

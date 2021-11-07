@@ -5,8 +5,8 @@
     v-bind:class="headerClasses"
   >
     <!--begin::Logo-->
-    <a href="/">
-      <img alt="Logo" :src="headerLogo" />
+    <a href="/" class="d-flex align-items-center h-100">
+      <img alt="Logo" src="/media/Printibe-logo1.png" class="h-30px"/>
     </a>
     <!--end::Logo-->
     <!--begin::Toolbar-->
