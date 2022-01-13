@@ -11,14 +11,29 @@ export default new Router({
       component: () => import("@/view/layout/Layout"),
       children: [
         {
-          path: "/dashboard",
-          name: "dashboard",
-          component: () => import("@/view/pages/Dashboard.vue")
-        },
-        {
           path: "/reports",
           name: "reports",
           component: () => import("@/view/pages/Reports.vue")
+        },
+        {
+          path: "/products",
+          name: "products",
+          component: () => import("@/view/pages/Products.vue")
+        },
+        {
+          path: "/add-product",
+          name: "add-product",
+          beforeEnter() { window.open('https://printribe-2021.web.app/product-catalog', "_blank") },
+        },
+        {
+          path: "/integrations/shopify",
+          name: "shopify",
+          component: () => import("@/view/pages/Shopify.vue")
+        },
+        {
+          path: "/settings",
+          name: "settings",
+          component: () => import("@/view/pages/Settings.vue")
         },
         {
           path: "/builder",

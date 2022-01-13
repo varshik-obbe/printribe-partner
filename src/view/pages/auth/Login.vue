@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--begin::Content header-->
-    <div
+    <!-- <div
       class="position-absolute top-0 right-0 text-right mt-5 mb-15 mb-lg-0 flex-column-auto justify-content-center py-5 px-10"
     >
       <span class="font-weight-bold font-size-3 text-dark-60">
@@ -13,7 +13,7 @@
       >
         Sign Up!
       </router-link>
-    </div>
+    </div> -->
     <!--end::Content header-->
 
     <!--begin::Signin-->

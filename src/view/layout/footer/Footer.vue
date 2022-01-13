@@ -2,7 +2,7 @@
   <!-- begin:: Footer -->
   <div class="footer bg-white py-4 d-flex flex-lg-column" id="kt_footer">
     <div
-      class="d-flex align-items-center justify-content-between"
+      class="d-flex align-items-center justify-content-center"
       v-bind:class="{ 'container-fluid': widthFluid, container: !widthFluid }"
     >
       <div class="text-dark">
