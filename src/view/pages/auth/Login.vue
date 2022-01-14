@@ -54,6 +54,7 @@
             id="example-input-1"
             name="example-input-1"
             v-model="$v.form.email.$model"
+            placeholder="Email"
             :state="validateState('email')"
             aria-describedby="input-1-live-feedback"
           ></b-form-input>
@@ -74,6 +75,7 @@
             id="example-input-2"
             name="example-input-2"
             v-model="$v.form.password.$model"
+            placeholder="Password"
             :state="validateState('password')"
             aria-describedby="input-2-live-feedback"
           ></b-form-input>
