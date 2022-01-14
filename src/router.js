@@ -441,11 +441,11 @@ export default new Router({
           path: "/login",
           component: () => import("@/view/pages/auth/Login")
         },
-        {
-          name: "register",
-          path: "/register",
-          component: () => import("@/view/pages/auth/Register")
-        }
+        // {
+        //   name: "register",
+        //   path: "/register",
+        //   component: () => import("@/view/pages/auth/Register")
+        // }
       ]
     },
     {

@@ -1,7 +1,7 @@
-import Vue from "vue";
-import axios from "axios";
-import VueAxios from "vue-axios";
 import JwtService from "@/core/services/jwt.service";
+import Vue from "vue";
+import VueAxios from "vue-axios";
+import axios from "axios";
 
 /**
  * Service to call HTTP request via Axios
@@ -9,7 +9,7 @@ import JwtService from "@/core/services/jwt.service";
 const ApiService = {
   init() {
     Vue.use(VueAxios, axios);
-    Vue.axios.defaults.baseURL = "http://localhost";
+    Vue.axios.defaults.baseURL = "https://api.theprintribe.com/api";
   },
 
   /**
@@ -35,7 +35,7 @@ const ApiService = {
    * @returns {*}
    */
   get(resource, slug = "") {
-    return Vue.axios.get(`${resource}/${slug}`).catch(error => {
+    return Vue.axios.get(`${resource}`).catch(error => {
       // console.log(error);
       throw new Error(`[KT] ApiService ${error}`);
     });

@@ -21,18 +21,18 @@
       <div class="text-center mb-10 mb-lg-20">
         <h3 class="font-size-h1">Sign In</h3>
         <p class="text-muted font-weight-semi-bold">
-          Enter your username and password
+          Enter your email and password
         </p>
       </div>
 
       <!--begin::Form-->
       <b-form class="form" @submit.stop.prevent="onSubmit">
-        <div role="alert" class="alert alert-info">
+        <!-- <div role="alert" class="alert alert-info">
           <div class="alert-text">
             Use account <strong>admin@demo.com</strong> and password
             <strong>demo</strong> to continue.
           </div>
-        </div>
+        </div> -->
 
         <div
           role="alert"
@@ -85,7 +85,13 @@
 
         <!--begin::Action-->
         <div
-          class="form-group d-flex flex-wrap justify-content-between align-items-center"
+          class="
+            form-group
+            d-flex
+            flex-wrap
+            justify-content-between
+            align-items-center
+          "
         >
           <a
             href="#"
@@ -129,22 +135,23 @@ export default {
     return {
       // Remove this dummy login info
       form: {
-        email: "admin@demo.com",
-        password: "demo"
-      }
+        email: "",
+        password: "",
+        role: "customer",
+      },
     };
   },
   validations: {
     form: {
       email: {
         required,
-        email
+        email,
       },
       password: {
         required,
-        minLength: minLength(3)
-      }
-    }
+        minLength: minLength(3),
+      },
+    },
   },
   methods: {
     validateState(name) {
@@ -154,7 +161,7 @@ export default {
     resetForm() {
       this.form = {
         email: null,
-        password: null
+        password: null,
       };
 
       this.$nextTick(() => {
@@ -167,8 +174,13 @@ export default {
         return;
       }
 
-      const email = this.$v.form.email.$model;
-      const password = this.$v.form.password.$model;
+      const data = {
+        credentials: {
+          email: this.$v.form.email.$model,
+          password: this.$v.form.password.$model,
+          role: this.form.role,
+        },
+      };
 
       // clear existing errors
       this.$store.dispatch(LOGOUT);
@@ -181,9 +193,9 @@ export default {
       setTimeout(() => {
         // send login request
         this.$store
-          .dispatch(LOGIN, { email, password })
+          .dispatch(LOGIN, data)
           // go to which page after successfully login
-          .then(() => this.$router.push({ name: "reports" }));
+          .then(() => this.$router.push("/"));
 
         submitButton.classList.remove(
           "spinner",
@@ -191,12 +203,12 @@ export default {
           "spinner-right"
         );
       }, 2000);
-    }
+    },
   },
   computed: {
     ...mapState({
-      errors: state => state.auth.errors
-    })
-  }
+      errors: (state) => state.auth.errors,
+    }),
+  },
 };
 </script>

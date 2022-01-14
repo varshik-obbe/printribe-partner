@@ -21,6 +21,7 @@ const state = {
 
 const getters = {
   currentUser(state) {
+    // console.log(state.user);
     return state.user;
   },
   isAuthenticated(state) {
@@ -31,9 +32,10 @@ const getters = {
 const actions = {
   [LOGIN](context, credentials) {
     return new Promise(resolve => {
-      ApiService.post("login", credentials)
+      ApiService.post("/customers/login", credentials)
         .then(({ data }) => {
           context.commit(SET_AUTH, data);
+          console.log(data);
           resolve(data);
         })
         .catch(({ response }) => {
@@ -91,7 +93,7 @@ const mutations = {
   },
   [SET_AUTH](state, user) {
     state.isAuthenticated = true;
-    state.user = user;
+    state.user = user.customer;
     state.errors = {};
     JwtService.saveToken(state.user.token);
   },
