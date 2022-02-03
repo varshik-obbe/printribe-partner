@@ -125,6 +125,13 @@
     </div> -->
     <!--end: Language bar -->
 
+    <!-- wallet::start -->
+    <div class="d-flex justify-content-center align-items-center h6 mr-5 mb-0">
+<span class="fw-bold">₹2131</span>
+    <i class="fas fa-wallet text-dark ml-3"></i>
+    </div>
+    <!-- wallet::end -->
+
     <!--begin: User Bar -->
     <KTQuickUser></KTQuickUser>
     <!--end: User Bar -->
