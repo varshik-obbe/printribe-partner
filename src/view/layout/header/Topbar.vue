@@ -1,6 +1,6 @@
 <template>
   <!-- begin:: Header Topbar -->
-  <div class="topbar " >
+  <div class="topbar">
     <!--begin: Search -->
     <!-- <b-dropdown
       size="sm"
@@ -99,8 +99,9 @@
     <!-- <KTQuickPanel></KTQuickPanel> -->
     <!--end: Quick panel toggle -->
 
-    <!--begin: Language bar -->
-    <!-- <div class="topbar-item">
+    <!-- wallet::start -->
+
+    <div class="topbar-item" @mouseover="onOverWallet" @mouseleave="onLeaveWallet">
       <b-dropdown
         size="sm"
         variant="link"
@@ -108,28 +109,51 @@
         no-caret
         right
         no-flip
+        ref="walletDropdown"
       >
         <template v-slot:button-content>
-          <img
-            class="h-20px w-20px rounded-sm"
-            :src="languageFlag || getLanguageFlag"
-            alt=""
-          />
+          <i class="fas fa-wallet text-dark"></i>
         </template>
         <b-dropdown-text tag="div" class="min-w-md-175px">
-          <KTDropdownLanguage
-            v-on:language-changed="onLanguageChanged"
-          ></KTDropdownLanguage>
+          <div
+            class="
+              p-4
+              d-flex
+              flex-column
+              justify-content-evenly
+              align-items-center
+            "
+          >
+            <span v-if="walletData" class="mb-4 h3">₹{{walletData.amount}}</span>
+            <div class="btn btn-primary" v-b-modal.add-amount-modal>
+              Add amount
+            </div>
+          </div>
         </b-dropdown-text>
       </b-dropdown>
-    </div> -->
-    <!--end: Language bar -->
-
-    <!-- wallet::start -->
-    <div class="d-flex justify-content-center align-items-center h6 mr-5 mb-0">
-<span class="fw-bold">₹2131</span>
-    <i class="fas fa-wallet text-dark ml-3"></i>
     </div>
+
+    <!-- add amount modal::begin -->
+    <b-modal
+      id="add-amount-modal"
+      centered
+      hide-footer
+      size="lg"
+      title="Add Amount"
+    >
+      <b-input-group class="mt-3">
+        <template #prepend>
+          <b-input-group-text>
+            <strong>₹</strong>
+          </b-input-group-text>
+        </template>
+        <b-form-input type="tel" v-model="walletAmount"></b-form-input>
+      </b-input-group>
+      <div class="w-100 mt-5 text-center">
+        <div class="btn btn-primary" @click="addAmount">Add</div>
+      </div>
+    </b-modal>
+    <!-- add amount modal::end -->
     <!-- wallet::end -->
 
     <!--begin: User Bar -->
@@ -173,14 +197,16 @@ import KTDropdownMyCart from "@/view/layout/extras/dropdown/DropdownMyCart.vue";
 import KTDropdownLanguage from "@/view/layout/extras/dropdown/DropdownLanguage.vue";
 import KTQuickUser from "@/view/layout/extras/offcanvas/QuickUser.vue";
 import KTQuickPanel from "@/view/layout/extras/offcanvas/QuickPanel.vue";
-import i18nService from "@/core/services/i18n.service.js";
-
+// import i18nService from "@/core/services/i18n.service.js";
+import ApiService from "@/core/services/api.service";
+import { mapGetters } from "vuex";
+import Swal from 'sweetalert2'
 export default {
   name: "KTTopbar",
   data() {
     return {
-      languageFlag: "",
-      languages: i18nService.languages
+      walletAmount: "",
+      walletData:{}
     };
   },
   components: {
@@ -190,19 +216,59 @@ export default {
     KTDropdownMyCart,
     KTDropdownLanguage,
     KTQuickUser,
-    KTQuickPanel
+    KTQuickPanel,
+  },
+  created() {
+    ApiService.get(`/customerWallet/getWalletbyid/${this.currentUser.id}`)
+      .then(({ data }) => {
+        this.walletData = data.wallet
+        console.log(data);
+      })
+      .catch((resp) => {
+        console.log(resp);
+      });
   },
   methods: {
-    onLanguageChanged() {
-      this.languageFlag = this.languages.find(val => {
-        return val.lang === i18nService.getActiveLanguage();
-      }).flag;
-    }
+    addAmount() {
+      // let uploadData = {
+      //   walletData: {
+      //     customer_id: this.currentUser.id,
+      //     currency: "INR",
+      //     amount: this.walletAmount,
+      //     status: "active",
+      //   },
+      // };
+      // ApiService.post(`/customerWallet/addWalletAmount`,uploadData)
+      //   .then(({ data }) => {
+      //     this.$bvModal.hide('add-amount-modal')
+      //     console.log(data);
+      //     Swal.fire({
+      //       title: "Amount added!",
+      //       icon: "success",
+      //       confirmButtonText: "Okay",
+      //     })
+      //   })
+      //   .catch((resp) => {
+      //     this.$bvModal.hide('add-amount-modal')
+      //     console.log(resp);
+      //     Swal.fire({
+      //     title: "Error!",
+      //     text: "Some error occurred while adding amount. Please try again later.",
+      //     icon: "error",
+      //     confirmButtonText: "Close",
+      //   });
+      //   });
+    },
+    onOverWallet(){
+      this.$refs.walletDropdown.visible = true;
+    },
+    onLeaveWallet(){
+      this.$refs.walletDropdown.visible = false;
+
+    },
   },
   computed: {
-    getLanguageFlag() {
-      return this.onLanguageChanged();
-    }
-  }
+    ...mapGetters(["currentUser"]),
+  },
 };
 </script>

@@ -34,7 +34,7 @@
           </div>
         </div> -->
 
-        <div
+        <!-- <div
           role="alert"
           v-bind:class="{ show: errors.length }"
           class="alert fade alert-danger"
@@ -42,7 +42,7 @@
           <div class="alert-text" v-for="(error, i) in errors" :key="i">
             {{ error }}
           </div>
-        </div>
+        </div> -->
 
         <b-form-group
           id="example-input-group-1"
@@ -129,7 +129,6 @@ import { LOGIN, LOGOUT } from "@/core/services/store/auth.module";
 
 import { validationMixin } from "vuelidate";
 import { email, minLength, required } from "vuelidate/lib/validators";
-
 export default {
   mixins: [validationMixin],
   name: "login",

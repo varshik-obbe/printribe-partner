@@ -1,5 +1,6 @@
 import ApiService from "@/core/services/api.service";
 import JwtService from "@/core/services/jwt.service";
+import Swal from 'sweetalert2'
 
 // action types
 export const VERIFY_AUTH = "verifyAuth";
@@ -33,12 +34,22 @@ const actions = {
   [LOGIN](context, credentials) {
     return new Promise(resolve => {
       ApiService.post("/customers/login", credentials)
-        .then(({ data }) => {
+        .then(({
+          data
+        }) => {
           context.commit(SET_AUTH, data);
           console.log(data);
           resolve(data);
         })
-        .catch(({ response }) => {
+        .catch(({
+          response
+        }) => {
+          Swal.fire({
+            title: "Error!",
+            text: "Please check your credentials",
+            icon: "error",
+            confirmButtonText: "Close",
+          })
           context.commit(SET_ERROR, response.data.errors);
         });
     });
@@ -48,12 +59,18 @@ const actions = {
   },
   [REGISTER](context, credentials) {
     return new Promise((resolve, reject) => {
-      ApiService.post("users", { user: credentials })
-        .then(({ data }) => {
+      ApiService.post("users", {
+          user: credentials
+        })
+        .then(({
+          data
+        }) => {
           context.commit(SET_AUTH, data);
           resolve(data);
         })
-        .catch(({ response }) => {
+        .catch(({
+          response
+        }) => {
           context.commit(SET_ERROR, response.data.errors);
           reject(response);
         });
@@ -74,13 +91,26 @@ const actions = {
     // }
   },
   [UPDATE_USER](context, payload) {
-    const { email, username, password, image, bio } = payload;
-    const user = { email, username, bio, image };
+    const {
+      email,
+      username,
+      password,
+      image,
+      bio
+    } = payload;
+    const user = {
+      email,
+      username,
+      bio,
+      image
+    };
     if (password) {
       user.password = password;
     }
 
-    return ApiService.put("user", user).then(({ data }) => {
+    return ApiService.put("user", user).then(({
+      data
+    }) => {
       context.commit(SET_AUTH, data);
       return data;
     });

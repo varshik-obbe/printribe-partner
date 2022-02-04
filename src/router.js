@@ -7,9 +7,14 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/reports",
+      redirect: "/dashboard",
       component: () => import("@/view/layout/Layout"),
       children: [
+        {
+          path: "/dashboard",
+          name: "dashboard",
+          component: () => import("@/view/pages/Dashboard.vue")
+        },
         {
           path: "/reports",
           name: "reports",

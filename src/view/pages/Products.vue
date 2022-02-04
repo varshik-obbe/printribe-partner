@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2 class="mb-5">Reports</h2>
+    <h2 class="mb-5">Products</h2>
     <MyProductsTable></MyProductsTable>
   </div>
 </template>
