@@ -23,7 +23,7 @@ export default new Router({
         {
           path: "/add-product",
           name: "add-product",
-          beforeEnter() { window.open('https://printribe-2021.web.app/product-catalog', "_blank") },
+          beforeEnter() { window.open('https://printribe-2021.web.app/products', "_blank") },
         },
         {
           path: "/integrations/shopify",
