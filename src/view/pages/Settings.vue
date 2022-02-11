@@ -598,7 +598,7 @@ export default {
             icon: "success",
             confirmButtonText: "Okay",
           }).then(() => {
-            this.$router.back();
+            // this.$router.back();
           });
         })
         .catch((resp) => {

@@ -4,7 +4,7 @@
     <!--begin::Body-->
     <div class="card-body pt-3 pb-0">
       <!--begin::Table-->
-      <div class="table-responsive">
+      <div v-if="list.length>0" class="table-responsive">
         <table class="table table-borderless table-vertical-center">
           <thead>
             <tr>
@@ -93,6 +93,7 @@
           </tbody>
         </table>
       </div>
+      <div v-else class="my-5 text-center">No products</div>
       <!--end::Table-->
     </div>
     <!--end::Body-->
@@ -113,7 +114,6 @@ export default {
   created() {
     axios
       .get(`/customerInventory/getProducts/${this.currentUser.id}`)
-      // .get(`/customerInventory/getProducts/61e7a8af6b91a9d48b531e9c`)
       .then(({ data }) => {
         console.log(data);
         this.list = data.products;

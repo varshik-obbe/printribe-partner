@@ -21,6 +21,16 @@ export default new Router({
           component: () => import("@/view/pages/Reports.vue")
         },
         {
+          path: "/orders",
+          name: "orders",
+          component: () => import("@/view/pages/Orders.vue")
+        },
+        {
+          path: "/other-orders",
+          name: "other-orders",
+          component: () => import("@/view/pages/OtherOrders.vue")
+        },
+        {
           path: "/products",
           name: "products",
           component: () => import("@/view/pages/Products.vue")

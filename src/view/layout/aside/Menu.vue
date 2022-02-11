@@ -14,7 +14,7 @@
         ]"
       >
         <a :href="href" class="menu-link" @click="navigate">
-            <i class="menu-icon flaticon2-architecture-and-city"></i>
+          <i class="menu-icon flaticon2-architecture-and-city"></i>
           <span class="menu-text">Dashboard</span>
         </a>
       </li>
@@ -35,6 +35,44 @@
         <a :href="href" class="menu-link" @click="navigate">
           <i class="menu-icon fas fa-file-alt"></i>
           <span class="menu-text">Reports</span>
+        </a>
+      </li>
+    </router-link>
+    <router-link
+      to="/orders"
+      v-slot="{ href, navigate, isActive, isExactActive }"
+    >
+      <li
+        aria-haspopup="true"
+        data-menu-toggle="hover"
+        class="menu-item"
+        :class="[
+          isActive && 'menu-item-active',
+          isExactActive && 'menu-item-active',
+        ]"
+      >
+        <a :href="href" class="menu-link" @click="navigate">
+          <i class="menu-icon fas fa-shopping-bag"></i>
+          <span class="menu-text">Orders</span>
+        </a>
+      </li>
+    </router-link>
+    <router-link
+      to="/other-orders"
+      v-slot="{ href, navigate, isActive, isExactActive }"
+    >
+      <li
+        aria-haspopup="true"
+        data-menu-toggle="hover"
+        class="menu-item"
+        :class="[
+          isActive && 'menu-item-active',
+          isExactActive && 'menu-item-active',
+        ]"
+      >
+        <a :href="href" class="menu-link" @click="navigate">
+          <i class="menu-icon fas fa-luggage-cart"></i>
+          <span class="menu-text">Other Orders</span>
         </a>
       </li>
     </router-link>
