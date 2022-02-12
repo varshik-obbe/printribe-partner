@@ -101,7 +101,11 @@
 
     <!-- wallet::start -->
 
-    <div class="topbar-item" @mouseover="onOverWallet" @mouseleave="onLeaveWallet">
+    <div
+      class="topbar-item"
+      @mouseover="onOverWallet"
+      @mouseleave="onLeaveWallet"
+    >
       <b-dropdown
         size="sm"
         variant="link"
@@ -124,7 +128,9 @@
               align-items-center
             "
           >
-            <span v-if="walletData" class="mb-4 h3">₹{{walletData.amount}}</span>
+            <span v-if="walletData" class="mb-4 h3"
+              >₹{{ walletData.amount }}</span
+            >
             <div class="btn btn-primary" v-b-modal.add-amount-modal>
               Add amount
             </div>
@@ -189,6 +195,7 @@
 }
 </style>
 
+
 <script>
 import KTSearchDefault from "@/view/layout/extras/dropdown/SearchDefault.vue";
 import KTDropdownNotification from "@/view/layout/extras/dropdown/DropdownNotification.vue";
@@ -197,16 +204,16 @@ import KTDropdownMyCart from "@/view/layout/extras/dropdown/DropdownMyCart.vue";
 import KTDropdownLanguage from "@/view/layout/extras/dropdown/DropdownLanguage.vue";
 import KTQuickUser from "@/view/layout/extras/offcanvas/QuickUser.vue";
 import KTQuickPanel from "@/view/layout/extras/offcanvas/QuickPanel.vue";
-// import i18nService from "@/core/services/i18n.service.js";
 import ApiService from "@/core/services/api.service";
 import { mapGetters } from "vuex";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 export default {
   name: "KTTopbar",
   data() {
     return {
       walletAmount: "",
-      walletData:{}
+      walletData: {},
+      razorPayInitData: {},
     };
   },
   components: {
@@ -221,7 +228,7 @@ export default {
   created() {
     ApiService.get(`/customerWallet/getWalletbyid/${this.currentUser.id}`)
       .then(({ data }) => {
-        this.walletData = data.wallet
+        this.walletData = data.wallet;
         console.log(data);
       })
       .catch((resp) => {
@@ -230,41 +237,87 @@ export default {
   },
   methods: {
     addAmount() {
-      // let uploadData = {
-      //   walletData: {
-      //     customer_id: this.currentUser.id,
-      //     currency: "INR",
-      //     amount: this.walletAmount,
-      //     status: "active",
-      //   },
-      // };
-      // ApiService.post(`/customerWallet/addWalletAmount`,uploadData)
-      //   .then(({ data }) => {
-      //     this.$bvModal.hide('add-amount-modal')
-      //     console.log(data);
-      //     Swal.fire({
-      //       title: "Amount added!",
-      //       icon: "success",
-      //       confirmButtonText: "Okay",
-      //     })
-      //   })
-      //   .catch((resp) => {
-      //     this.$bvModal.hide('add-amount-modal')
-      //     console.log(resp);
-      //     Swal.fire({
-      //     title: "Error!",
-      //     text: "Some error occurred while adding amount. Please try again later.",
-      //     icon: "error",
-      //     confirmButtonText: "Close",
-      //   });
-      //   });
+      let amount = parseInt(this.walletAmount) * 100;
+
+      let data = {
+        insdata: {
+          customer_id: this.currentUser.id,
+          currency: "INR",
+          amount: amount,
+        },
+      };
+      ApiService.post(`/customerWallet/razorPayInstantiate`, data)
+        .then(({ data }) => {
+          console.log(data);
+          this.razorPayInitData = data.savedhistoryData;
+          this.razorPayCheckout();
+        })
+        .catch((resp) => {
+          this.$bvModal.hide("add-amount-modal");
+          console.log(resp);
+          Swal.fire({
+            title: "Error!",
+            text: "Some error occurred while adding amount. Please try again later.",
+            icon: "error",
+            confirmButtonText: "Close",
+          });
+        });
     },
-    onOverWallet(){
+    razorPayCheckout() {
+      let self = this;
+      let amount = parseInt(self.walletAmount) * 100;
+      console.log(amount);
+      var options = {
+        key: "rzp_test_aAHglk8OS8HPRk", // Enter the Key ID generated from the Dashboard
+        amount: amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        currency: "INR",
+        name: self.currentUser.email,
+        // image: "https://example.com/your_logo",
+        order_id: self.razorPayInitData.payment_order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        handler: function (response) {
+          // alert(response.razorpay_payment_id);
+          // alert(response.razorpay_order_id);
+          // alert(response.razorpay_signature);
+
+          self.$bvModal.hide("add-amount-modal");
+          self.walletAmount = "";
+          Swal.fire({
+            title: "Transaction successful!",
+            text: "Amount has been added in your wallet",
+            icon: "success",
+            confirmButtonText: "Okay",
+          });
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+      console.log("razorpay", options);
+      var rzp1 = new window.Razorpay(options);
+      rzp1.on("payment.failed", function (response) {
+        // alert(response.error.code);
+        // alert(response.error.description);
+        // alert(response.error.source);
+        // alert(response.error.step);
+        // alert(response.error.reason);
+        // alert(response.error.metadata.order_id);
+        // alert(response.error.metadata.payment_id);
+        self.$bvModal.hide("add-amount-modal");
+        self.walletAmount = "";
+        Swal.fire({
+          title: "Error!",
+          text: response.error.description,
+          icon: "error",
+          confirmButtonText: "Close",
+        });
+      });
+      rzp1.open();
+    },
+    onOverWallet() {
       this.$refs.walletDropdown.visible = true;
     },
-    onLeaveWallet(){
+    onLeaveWallet() {
       this.$refs.walletDropdown.visible = false;
-
     },
   },
   computed: {
