@@ -226,16 +226,19 @@ export default {
     KTQuickPanel,
   },
   created() {
-    ApiService.get(`/customerWallet/getWalletbyid/${this.currentUser.id}`)
-      .then(({ data }) => {
-        this.walletData = data.wallet;
-        console.log(data);
-      })
-      .catch((resp) => {
-        console.log(resp);
-      });
+    this.getWalletAmount();
   },
   methods: {
+    getWalletAmount() {
+      ApiService.get(`/customerWallet/getWalletbyid/${this.currentUser.id}`)
+        .then(({ data }) => {
+          this.walletData = data.wallet;
+          console.log(data);
+        })
+        .catch((resp) => {
+          console.log(resp);
+        });
+    },
     addAmount() {
       let amount = parseInt(this.walletAmount) * 100;
 
@@ -278,15 +281,40 @@ export default {
           // alert(response.razorpay_payment_id);
           // alert(response.razorpay_order_id);
           // alert(response.razorpay_signature);
-
-          self.$bvModal.hide("add-amount-modal");
-          self.walletAmount = "";
-          Swal.fire({
-            title: "Transaction successful!",
-            text: "Amount has been added in your wallet",
-            icon: "success",
-            confirmButtonText: "Okay",
-          });
+          let addWalletData = {
+            walletData: {
+              customer_id: self.currentUser.id,
+              currency: "INR",
+              amount: self.walletAmount,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            },
+          };
+          ApiService.post("/customerWallet/addWalletAmount", addWalletData)
+            .then(({ data }) => {
+              self.$bvModal.hide("add-amount-modal");
+              self.walletAmount = "";
+              Swal.fire({
+                title: "Transaction successful!",
+                text: "Amount has been added in your wallet",
+                icon: "success",
+                confirmButtonText: "Okay",
+              }).then(() => {
+                self.getWalletAmount();
+              });
+            })
+            .catch((resp) => {
+              Swal.fire({
+                title: "Error!",
+                text: "Error adding amount to wallet. Please contact support for help",
+                icon: "error",
+                confirmButtonText: "Close",
+              }).then(() => {
+                self.$bvModal.hide("add-amount-modal");
+                self.walletAmount = "";
+              });
+            });
         },
         theme: {
           color: "#3399cc",

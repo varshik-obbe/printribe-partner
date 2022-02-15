@@ -35,9 +35,12 @@
               <th class="p-0 h5" style="min-width: 200px; text-align: center">
                 Products details
               </th>
+              <th class="p-0 h5" style="min-width: 150px; text-align: center">
+                Track product
+              </th>
             </tr>
           </thead>
-          <br><br>
+          <br /><br />
           <tbody>
             <template v-for="(item, i) in list">
               <tr v-bind:key="i">
@@ -119,6 +122,20 @@
                     >
                       Open
                     </div>
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span
+                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
+                  >
+                    <div
+                      v-if="item.shipment_status === 'picking up order'"
+                      class="btn btn-info"
+                      @click="trackShipment(item.shiprocket_awb)"
+                    >
+                      Track
+                    </div>
+                    <div v-else class="btn btn-secondary disabled">Track</div>
                   </span>
                 </td>
                 <!-- <td class="text-right pr-0">
@@ -470,6 +487,154 @@
       </div>
     </b-modal>
     <!-- Products details modal::end -->
+
+    <!-- Tracking details modal::begin -->
+    <b-modal id="tracking-details-modal" size="xl" hide-footer title="Products">
+      <div class="row">
+        <div class="col-6">
+          <h5>Tracking URL:</h5>
+        </div>
+        <div class="col-6">
+          <h5><a :href="trackURL" target="_blank">trackURL</a></h5>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-6"><h5>Current status</h5></div>
+        <div class="col-6">
+          <h5>{{ trackingDetails.current_status }}</h5>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-6"><h5>Pick-up date</h5></div>
+        <div class="col-6">
+          <h5>{{ trackingDetails.pickup_date }}</h5>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-6"><h5>Delivered date</h5></div>
+        <div class="col-6">
+          <h5>{{ trackingDetails.delivered_date }}</h5>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-6"><h5>Destination</h5></div>
+        <div class="col-6">
+          <h5>{{ trackingDetails.destination }}</h5>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-6"><h5>Origin</h5></div>
+        <div class="col-6">
+          <h5>{{ trackingDetails.origin }}</h5>
+        </div>
+      </div>
+      <hr />
+      <br /><br />
+
+      <!-- Shipment Activities table::begin -->
+      <div class="table-responsive">
+        <table class="table table-borderless table-vertical-center">
+          <thead>
+            <tr>
+              <th class="p-0 h5" style="min-width: 180px; text-align: center">
+                Date
+              </th>
+
+              <th class="p-0 h5" style="min-width: 200px; text-align: center">
+                Status
+              </th>
+              <th class="p-0 h5" style="min-width: 130px; text-align: center">
+                Activity
+              </th>
+              <th class="p-0 h5" style="min-width: 100px; text-align: center">
+                Location
+              </th>
+              <th class="p-0 h5" style="min-width: 80px; text-align: center">
+                SR Status
+              </th>
+              <th class="p-0 h5" style="min-width: 100px; text-align: center">
+                SR Status Label
+              </th>
+            </tr>
+          </thead>
+          <br />
+          <br />
+          <tbody>
+            <template v-for="(item, i) in shipmentTrackActivities">
+              <tr v-bind:key="i">
+                <td class="pl-0 text-center">
+                  <span
+                    class="
+                      text-dark-75
+                      font-weight-bolder
+                      text-hover-primary
+                      mb-1
+                      font-size-lg
+                    "
+                  >
+                    {{ item.date }}
+                  </span>
+                </td>
+
+                <td class="text-center">
+                  <span
+                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
+                  >
+                    {{ item.status }}
+                  </span>
+                </td>
+
+                <td class="text-center">
+                  <span
+                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
+                  >
+                    {{ item.activity }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span
+                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
+                  >
+                    {{ item.location }}
+                  </span>
+                </td>
+
+                <td class="text-center">
+                  <span
+                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
+                  >
+                    {{ item["sr-status"] }}
+                  </span>
+                </td>
+
+                <td class="text-center">
+                  <span
+                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
+                  >
+                    {{ item["sr-status-label"] }}
+                  </span>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <!-- Shipment Activities table::end -->
+      <div class="w-100 text-center">
+        <div
+          class="btn btn-primary my-5"
+          @click="$bvModal.hide('tracking-details-modal')"
+        >
+          Close
+        </div>
+      </div>
+    </b-modal>
+    <!-- Tracking details modal::end -->
   </div>
 </template>
 
@@ -483,12 +648,15 @@ export default {
       list: [],
       shippingDetails: {},
       productDetails: [],
+      trackingDetails: {},
+      trackURL: "",
+      shipmentTrackActivities: [],
+
     };
   },
   created() {
     axios
-      .get(`/orders/getOrders/${this.currentUser.id}`)
-      //   .get(`/orders/getOrders/61e7a8af6b91a9d48b531e9c`)
+      .get(`/orders/getCustomerOngoingOrders/${this.currentUser.id}`)
       .then(({ data }) => {
         console.log(data);
         this.list = data.orders;
@@ -510,6 +678,30 @@ export default {
       console.log(item);
       this.productDetails = item.product_info;
       this.$bvModal.show("products-details-modal");
+    },
+    trackShipment(awb_id) {
+      axios
+        .get(`/shiprocketGenrate/trackOrderShip/${awb_id}`)
+        .then(({ data }) => {
+          console.log(data);
+          this.trackingDetails =
+            data.responseData.tracking_data.shipment_track[0];
+
+          this.shipmentTrackActivities =
+            data.responseData.tracking_data.shipment_track_activities;
+
+          this.trackURL = data.responseData.tracking_data.track_url;
+          this.$bvModal.show("tracking-details-modal");
+        })
+        .catch((resp) => {
+          console.error(resp);
+          Swal.fire({
+            title: "Error!",
+            text: "Tracking data has not been updated yet. Please try again later.",
+            icon: "warning",
+            confirmButtonText: "Close",
+          });
+        });
     },
   },
 };

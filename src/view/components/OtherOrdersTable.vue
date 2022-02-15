@@ -461,8 +461,7 @@ export default {
   },
   created() {
     axios
-      .get(`/orders/getCustomerOngoingOrders/${this.currentUser.id}`)
-      //   .get(`/orders/getOrders/61e7a8af6b91a9d48b531e9c`)
+      .get(`/orders/getOrders/${this.currentUser.id}`)
       .then(({ data }) => {
         console.log(data);
         this.list = data.orders;
