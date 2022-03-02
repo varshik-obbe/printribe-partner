@@ -4,7 +4,18 @@ import Vue from "vue";
 Vue.use(Router);
 
 export default new Router({
+  mode: "history",
   routes: [
+    {
+      path: "/integrations/wix/redirect/:tokenParams",
+      name: "wix-redirect",
+      component: () => import("@/view/components/WixRedirect.vue")
+    },
+    {
+      path: "/integrations/wix/success",
+      name: "wix-success",
+      component: () => import("@/view/components/WixSuccess.vue")
+    },
     {
       path: "/",
       redirect: "/dashboard",
@@ -45,6 +56,12 @@ export default new Router({
           name: "shopify",
           component: () => import("@/view/pages/Shopify.vue")
         },
+        {
+          path: "/integrations/wix",
+          name: "wix",
+          component: () => import("@/view/pages/Wix.vue")
+        },
+
         {
           path: "/settings",
           name: "settings",

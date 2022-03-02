@@ -134,7 +134,7 @@ export default {
   name: "login",
   data() {
     return {
-      // Remove this dummy login info
+      fromWixSuccess: false,
       form: {
         email: "",
         password: "",
@@ -196,7 +196,13 @@ export default {
         this.$store
           .dispatch(LOGIN, data)
           // go to which page after successfully login
-          .then(() => this.$router.push("/"));
+          .then(() => {
+            if (this.fromWixSuccess) {
+              this.$router.push("/integrations/wix/success");
+            } else {
+              this.$router.push("/");
+            }
+          });
 
         submitButton.classList.remove(
           "spinner",
@@ -210,6 +216,13 @@ export default {
     ...mapState({
       errors: (state) => state.auth.errors,
     }),
+  },
+  watch: {
+    $route(to, from) {
+      if (from.name === "wix-success") {
+        this.fromWixSuccess = true;
+      }
+    },
   },
 };
 </script>

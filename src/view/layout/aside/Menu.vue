@@ -148,6 +148,25 @@
               </a>
             </li>
           </router-link>
+          <router-link
+            to="/integrations/wix"
+            v-slot="{ href, navigate, isActive, isExactActive }"
+          >
+            <li
+              aria-haspopup="true"
+              data-menu-toggle="hover"
+              class="menu-item"
+              :class="[
+                isActive && 'menu-item-active',
+                isExactActive && 'menu-item-active',
+              ]"
+            >
+              <a :href="href" class="menu-link" @click="navigate">
+                <i class="menu-icon fab fa-wix"></i>
+                <span class="menu-text">Wix</span>
+              </a>
+            </li>
+          </router-link>
         </ul>
       </div>
     </li>
