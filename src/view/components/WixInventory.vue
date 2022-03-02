@@ -77,18 +77,18 @@
                     class="text-dark-75 font-weight-bolder d-block font-size-lg"
                   >
                     <div
-                      v-if="item.wix_product_id && item.wix_product_id != ''"
-                      class="btn btn-danger"
-                      @click="removeProductFromWix(item.product_id)"
-                    >
-                      remove
-                    </div>
-                    <div
-                      v-else
+                      v-if="!item.wix_product_id || item.wix_product_id == ''"
                       class="btn btn-primary"
                       @click="addProductToWix(item.product_id, i)"
                     >
                       Add
+                    </div>
+                    <div
+                      v-else
+                      class="btn btn-danger"
+                      @click="removeProductFromWix(item.product_id)"
+                    >
+                      remove
                     </div>
                   </span>
                 </td>
@@ -99,6 +99,7 @@
                   centered
                   title="Adding Product To Wix Store"
                   hide-footer
+                  no-close-on-backdrop
                 >
                   <div v-if="apiLevel > 0">
                     <b-alert
@@ -172,10 +173,7 @@
                     ></b-alert>
                   </div>
                   <div class="w-100 text-center">
-                    <div
-                      class="btn btn-primary"
-                      @click="$bvModal.hide(`add-product-modal-${i}`)"
-                    >
+                    <div class="btn btn-primary" @click="closeModal(i)">
                       Close
                     </div>
                   </div>
@@ -287,11 +285,13 @@ export default {
           ApiService.post(`/wix/removeProduct`, {
             productData: {
               product_id: prodId,
-              customer_id: self.currentUser.id,
+              customer_id: this.currentUser.id,
             },
           })
             .then(({ data }) => {
-              Swal.fire("Removed!", "Product has been deleted.", "success");
+              Swal.fire("Removed!", "Product has been deleted.", "success").then(()=>{
+                  window.location.reload();
+              });
             })
             .catch((resp) => {
               console.error(resp);
@@ -303,6 +303,10 @@ export default {
             });
         }
       });
+    },
+    closeModal(i) {
+      $bvModal.hide(`add-product-modal-${i}`);
+      window.location.reload();
     },
   },
 };
