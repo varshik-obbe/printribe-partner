@@ -94,15 +94,6 @@
             <div class="navi mt-2">
               <a :href="'mailto:'+profileData.email" class="navi-item">
                 <span class="navi-link p-0 pb-2">
-                  <span class="navi-icon mr-1">
-                    <span class="svg-icon svg-icon-lg svg-icon-primary">
-                      <!--begin::Svg Icon-->
-                      <inline-svg
-                        src="media/svg/icons/Communication/Mail-notification.svg"
-                      />
-                      <!--end::Svg Icon-->
-                    </span>
-                  </span>
                   <span class="navi-text text-muted text-hover-primary font-size-h5">
                     {{profileData.email}}
                   </span>

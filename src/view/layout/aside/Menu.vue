@@ -148,25 +148,66 @@
               </a>
             </li>
           </router-link>
-          <router-link
-            to="/integrations/wix"
-            v-slot="{ href, navigate, isActive, isExactActive }"
+
+          <li
+            aria-haspopup="true"
+            data-menu-toggle="hover"
+            class="menu-item"
+            v-bind:class="{
+              'menu-item-open': hasActiveChildren('/integrations/wix'),
+            }"
           >
-            <li
-              aria-haspopup="true"
-              data-menu-toggle="hover"
-              class="menu-item"
-              :class="[
-                isActive && 'menu-item-active',
-                isExactActive && 'menu-item-active',
-              ]"
-            >
-              <a :href="href" class="menu-link" @click="navigate">
-                <i class="menu-icon fab fa-wix"></i>
-                <span class="menu-text">Wix</span>
-              </a>
-            </li>
-          </router-link>
+            <div class="menu-link menu-toggle">
+              <i class="menu-icon fab fa-wix"></i>
+              <span class="menu-text">Wix</span>
+              <i class="menu-arrow"></i>
+            </div>
+            <!-- wix submenu::begin -->
+            <div class="menu-submenu">
+              <span class="menu-arrow"></span>
+              <ul class="menu-subnav">
+                <router-link
+                  to="/integrations/wix/dashboard"
+                  v-slot="{ href, navigate, isActive, isExactActive }"
+                >
+                  <li
+                    aria-haspopup="true"
+                    data-menu-toggle="hover"
+                    class="menu-item"
+                    :class="[
+                      isActive && 'menu-item-active',
+                      isExactActive && 'menu-item-active',
+                    ]"
+                  >
+                    <a :href="href" class="menu-link" @click="navigate">
+                      <i class="menu-icon fas fa-th-large"></i>
+                      <span class="menu-text">Dashboard</span>
+                    </a>
+                  </li>
+                </router-link>
+                <router-link
+                  to="/integrations/wix/orders"
+                  v-slot="{ href, navigate, isActive, isExactActive }"
+                >
+                  <li
+                    aria-haspopup="true"
+                    data-menu-toggle="hover"
+                    class="menu-item"
+                    :class="[
+                      isActive && 'menu-item-active',
+                      isExactActive && 'menu-item-active',
+                    ]"
+                  >
+                    <a :href="href" class="menu-link" @click="navigate">
+                      <i class="menu-icon fas fa-shopping-bag"></i>
+                      <span class="menu-text">Orders</span>
+                    </a>
+                  </li>
+                </router-link>
+              </ul>
+            </div>
+            <!-- wix submenu::end -->
+          </li>
         </ul>
       </div>
     </li>

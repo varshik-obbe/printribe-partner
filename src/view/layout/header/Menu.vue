@@ -110,14 +110,13 @@
         </a>
       </li>
     </router-link>
-    <li
+    <!-- <li
       aria-haspopup="true"
       data-menu-toggle="hover"
       class="menu-item menu-item-submenu"
       v-bind:class="{ 'menu-item-open': hasActiveChildren('/integrations') }"
     >
       <a href="#" class="menu-link menu-toggle">
-        <!-- <i class="menu-icon flaticon2-digital-marketing"></i> -->
         <span class="menu-text">Integrations</span>
         <i class="menu-arrow"></i>
       </a>
@@ -138,16 +137,13 @@
               ]"
             >
               <a :href="href" class="menu-link" @click="navigate">
-                <!-- <i class="menu-icon flaticon2-digital-marketing">
-                  <span></span>
-                </i> -->
                 <span class="menu-text">Shopify</span>
               </a>
             </li>
           </router-link>
         </ul>
       </div>
-    </li>
+    </li> -->
     <router-link
       to="/settings"
       v-slot="{ href, navigate, isActive, isExactActive }"

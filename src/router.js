@@ -17,6 +17,11 @@ export default new Router({
       component: () => import("@/view/components/WixSuccess.vue")
     },
     {
+      path: "/integrations/wix/main-site/dashboard",
+      name: "wix-main-dashboard",
+      component: () => import("@/view/pages/WixDashboard.vue")
+    },
+    {
       path: "/",
       redirect: "/dashboard",
       component: () => import("@/view/layout/Layout"),
@@ -57,9 +62,14 @@ export default new Router({
           component: () => import("@/view/pages/Shopify.vue")
         },
         {
-          path: "/integrations/wix",
-          name: "wix",
-          component: () => import("@/view/pages/Wix.vue")
+          path: "/integrations/wix/dashboard",
+          name: "wix-dashboard",
+          component: () => import("@/view/pages/WixDashboard.vue")
+        },
+        {
+          path: "/integrations/wix/orders",
+          name: "wix-orders",
+          component: () => import("@/view/pages/WixOrders.vue")
         },
 
         {
