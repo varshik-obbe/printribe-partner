@@ -29,9 +29,7 @@
               <th class="p-0 h5" style="min-width: 200px; text-align: center">
                 Products details
               </th>
-              <th class="p-0 h5" style="min-width: 150px; text-align: center">
-                Track product
-              </th>
+              <th class="p-0 h5" style="min-width: 200px; text-align: center"></th>
             </tr>
           </thead>
           <br /><br />
@@ -70,7 +68,7 @@
                   <span
                     class="text-dark-75 font-weight-bolder d-block font-size-lg"
                   >
-                    ₹{{ item.shipping_charges }}
+                    ₹{{ item.shiprocket_order ? item.shipping_charges : "0" }}
                   </span>
                 </td>
                 <td class="text-center">
@@ -104,36 +102,10 @@
                     </div>
                   </span>
                 </td>
-                <td class="text-center">
-                  <span
-                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
-                  >
-                    <div
-                      v-if="item.shipment_status === 'picking up order'"
-                      class="btn btn-info"
-                      @click="trackShipment(item.shiprocket_awb)"
-                    >
-                      Track
-                    </div>
-                    <div v-else class="btn btn-secondary disabled">Track</div>
-                  </span>
+                <td class="text-center pr-0">
+                  <div class="btn btn-success mr-3">Accept</div>
+                  <div class="btn btn-danger">Reject</div>
                 </td>
-                <!-- <td class="text-right pr-0">
-                  <a href="#" class="btn btn-icon btn-light btn-sm mx-3">
-                    <span class="svg-icon svg-icon-md svg-icon-primary">
-                      <inline-svg
-                        src="media/svg/icons/Communication/Write.svg"
-                      ></inline-svg>
-                    </span>
-                  </a>
-                  <a href="#" class="btn btn-icon btn-light btn-sm">
-                    <span class="svg-icon svg-icon-md svg-icon-primary">
-                      <inline-svg
-                        src="media/svg/icons/General/Trash.svg"
-                      ></inline-svg>
-                    </span>
-                  </a>
-                </td> -->
               </tr>
             </template>
           </tbody>
@@ -157,14 +129,14 @@
       <div>
         <!--begin::Group-->
         <div class="form-group row fv-plugins-icon-container">
-          <label class="col-xl-3 col-lg-3 col-form-label">Company Name</label>
+          <label class="col-xl-3 col-lg-3 col-form-label">Full Name</label>
           <div class="col-lg-9 col-xl-9">
             <input
               class="form-control form-control-solid form-control-lg"
               name="Fullname"
               type="text"
               placeholder="Fullname"
-              v-model="shippingDetails.fullname"
+              :value="shippingDetails.fullname"
               disabled
             />
           </div>
@@ -207,7 +179,7 @@
                 class="form-control form-control-solid form-control-lg"
                 name="address2"
                 placeholder="address2"
-                v-model="shippingDetails.address2"
+                :value="shippingDetails.address2"
                 disabled
               />
             </div>
@@ -224,7 +196,7 @@
                 class="form-control form-control-solid form-control-lg"
                 name="country"
                 placeholder="country"
-                v-model="shippingDetails.country"
+                :value="shippingDetails.country"
                 disabled
               />
             </div>
@@ -241,7 +213,7 @@
                 class="form-control form-control-solid form-control-lg"
                 name="zip_code"
                 placeholder="zip_code"
-                v-model="shippingDetails.zip_code"
+                :value="shippingDetails.zip_code"
                 disabled
               />
             </div>
@@ -258,7 +230,7 @@
                 class="form-control form-control-solid form-control-lg"
                 name="state"
                 placeholder="state"
-                v-model="shippingDetails.state"
+                :value="shippingDetails.state"
                 disabled
               />
             </div>
@@ -275,7 +247,7 @@
                 class="form-control form-control-solid form-control-lg"
                 name="company"
                 placeholder="company"
-                v-model="shippingDetails.company"
+                :value="shippingDetails.company"
                 disabled
               />
             </div>
@@ -292,7 +264,7 @@
                 class="form-control form-control-solid form-control-lg"
                 name="phone"
                 placeholder="phone"
-                v-model="shippingDetails.phone"
+                :value="shippingDetails.phone"
                 disabled
               />
             </div>
@@ -309,7 +281,7 @@
                 class="form-control form-control-solid form-control-lg"
                 name="city"
                 placeholder="city"
-                v-model="shippingDetails.city"
+                :value="shippingDetails.city"
                 disabled
               />
             </div>
@@ -467,154 +439,6 @@
       </div>
     </b-modal>
     <!-- Products details modal::end -->
-
-    <!-- Tracking details modal::begin -->
-    <b-modal id="tracking-details-modal" size="xl" hide-footer title="Products">
-      <div class="row">
-        <div class="col-6">
-          <h5>Tracking URL:</h5>
-        </div>
-        <div class="col-6">
-          <h5><a :href="trackURL" target="_blank">trackURL</a></h5>
-        </div>
-      </div>
-      <hr />
-      <div class="row">
-        <div class="col-6"><h5>Current status</h5></div>
-        <div class="col-6">
-          <h5>{{ trackingDetails.current_status }}</h5>
-        </div>
-      </div>
-      <hr />
-      <div class="row">
-        <div class="col-6"><h5>Pick-up date</h5></div>
-        <div class="col-6">
-          <h5>{{ trackingDetails.pickup_date }}</h5>
-        </div>
-      </div>
-      <hr />
-      <div class="row">
-        <div class="col-6"><h5>Delivered date</h5></div>
-        <div class="col-6">
-          <h5>{{ trackingDetails.delivered_date }}</h5>
-        </div>
-      </div>
-      <hr />
-      <div class="row">
-        <div class="col-6"><h5>Destination</h5></div>
-        <div class="col-6">
-          <h5>{{ trackingDetails.destination }}</h5>
-        </div>
-      </div>
-      <hr />
-      <div class="row">
-        <div class="col-6"><h5>Origin</h5></div>
-        <div class="col-6">
-          <h5>{{ trackingDetails.origin }}</h5>
-        </div>
-      </div>
-      <hr />
-      <br /><br />
-
-      <!-- Shipment Activities table::begin -->
-      <div class="table-responsive">
-        <table class="table table-borderless table-vertical-center">
-          <thead>
-            <tr>
-              <th class="p-0 h5" style="min-width: 180px; text-align: center">
-                Date
-              </th>
-
-              <th class="p-0 h5" style="min-width: 200px; text-align: center">
-                Status
-              </th>
-              <th class="p-0 h5" style="min-width: 130px; text-align: center">
-                Activity
-              </th>
-              <th class="p-0 h5" style="min-width: 100px; text-align: center">
-                Location
-              </th>
-              <th class="p-0 h5" style="min-width: 80px; text-align: center">
-                SR Status
-              </th>
-              <th class="p-0 h5" style="min-width: 100px; text-align: center">
-                SR Status Label
-              </th>
-            </tr>
-          </thead>
-          <br />
-          <br />
-          <tbody>
-            <template v-for="(item, i) in shipmentTrackActivities">
-              <tr v-bind:key="i">
-                <td class="pl-0 text-center">
-                  <span
-                    class="
-                      text-dark-75
-                      font-weight-bolder
-                      text-hover-primary
-                      mb-1
-                      font-size-lg
-                    "
-                  >
-                    {{ item.date }}
-                  </span>
-                </td>
-
-                <td class="text-center">
-                  <span
-                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
-                  >
-                    {{ item.status }}
-                  </span>
-                </td>
-
-                <td class="text-center">
-                  <span
-                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
-                  >
-                    {{ item.activity }}
-                  </span>
-                </td>
-                <td class="text-center">
-                  <span
-                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
-                  >
-                    {{ item.location }}
-                  </span>
-                </td>
-
-                <td class="text-center">
-                  <span
-                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
-                  >
-                    {{ item["sr-status"] }}
-                  </span>
-                </td>
-
-                <td class="text-center">
-                  <span
-                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
-                  >
-                    {{ item["sr-status-label"] }}
-                  </span>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </table>
-      </div>
-      <!-- Shipment Activities table::end -->
-      <div class="w-100 text-center">
-        <div
-          class="btn btn-primary my-5"
-          @click="$bvModal.hide('tracking-details-modal')"
-        >
-          Close
-        </div>
-      </div>
-    </b-modal>
-    <!-- Tracking details modal::end -->
   </div>
 </template>
 
@@ -631,15 +455,14 @@ export default {
       trackingDetails: {},
       trackURL: "",
       shipmentTrackActivities: [],
-
     };
   },
   created() {
     axios
-      .get(`/orders/getCustomerOngoingOrders/${this.currentUser.id}`)
+      .get(`/wix/getWixOrders/${this.currentUser.id}`)
       .then(({ data }) => {
         console.log(data);
-        this.list = data.orders;
+        this.list = data.ordersData;
       })
       .catch((resp) => {
         console.log(resp);
@@ -651,12 +474,12 @@ export default {
   methods: {
     openShippingDetails(item) {
       console.log(item);
-      this.shippingDetails = item.customerShipping_id;
+      this.shippingDetails = item.customerShipping_details[0];
       this.$bvModal.show("shipping-modal");
     },
     openProductsDetails(item) {
-      console.log(item);
       this.productDetails = item.product_info;
+      console.log(this.productDetails);
       this.$bvModal.show("products-details-modal");
     },
     trackShipment(awb_id) {

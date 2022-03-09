@@ -159,7 +159,7 @@
           >
             <div class="menu-link menu-toggle">
               <i class="menu-icon fab fa-wix"></i>
-              <span class="menu-text">Wix</span>
+              <span class="menu-text">WIX</span>
               <i class="menu-arrow"></i>
             </div>
             <!-- wix submenu::begin -->
