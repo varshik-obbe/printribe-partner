@@ -269,7 +269,7 @@ export default {
     razorPayCheckout() {
       let self = this;
       let amount = parseInt(self.walletAmount) * 100;
-      console.log(amount);
+      // console.log(amount);
       var options = {
         key: "rzp_test_aAHglk8OS8HPRk", // Enter the Key ID generated from the Dashboard
         amount: amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -278,9 +278,6 @@ export default {
         // image: "https://example.com/your_logo",
         order_id: self.razorPayInitData.payment_order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
         handler: function (response) {
-          // alert(response.razorpay_payment_id);
-          // alert(response.razorpay_order_id);
-          // alert(response.razorpay_signature);
           let addWalletData = {
             walletData: {
               customer_id: self.currentUser.id,
@@ -323,13 +320,6 @@ export default {
       console.log("razorpay", options);
       var rzp1 = new window.Razorpay(options);
       rzp1.on("payment.failed", function (response) {
-        // alert(response.error.code);
-        // alert(response.error.description);
-        // alert(response.error.source);
-        // alert(response.error.step);
-        // alert(response.error.reason);
-        // alert(response.error.metadata.order_id);
-        // alert(response.error.metadata.payment_id);
         self.$bvModal.hide("add-amount-modal");
         self.walletAmount = "";
         Swal.fire({

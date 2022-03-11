@@ -29,13 +29,22 @@
               <th class="p-0 h5" style="min-width: 200px; text-align: center">
                 Products details
               </th>
-              <th class="p-0 h5" style="min-width: 200px; text-align: center"></th>
+              <th
+                class="p-0 h5"
+                style="min-width: 200px; text-align: center"
+              ></th>
             </tr>
           </thead>
           <br /><br />
           <tbody>
             <template v-for="(item, i) in list">
-              <tr v-bind:key="i">
+              <tr
+                v-bind:key="i"
+                v-if="
+                  item.partner_status !== 'approved' &&
+                  item.partner_status !== 'rejected'
+                "
+              >
                 <td class="pl-0 text-center">
                   <span
                     class="
@@ -68,7 +77,7 @@
                   <span
                     class="text-dark-75 font-weight-bolder d-block font-size-lg"
                   >
-                    ₹{{ item.shiprocket_order ? item.shipping_charges : "0" }}
+                    ₹{{ item.shipping_charges ? item.shipping_charges : "0" }}
                   </span>
                 </td>
                 <td class="text-center">
@@ -103,8 +112,12 @@
                   </span>
                 </td>
                 <td class="text-center pr-0">
-                  <div class="btn btn-success mr-3">Accept</div>
-                  <div class="btn btn-danger">Reject</div>
+                  <div class="btn btn-success mr-3" @click="approveOrder(item)">
+                    Accept
+                  </div>
+                  <div class="btn btn-danger" @click="rejectOrder(item)">
+                    Reject
+                  </div>
                 </td>
               </tr>
             </template>
@@ -439,12 +452,98 @@
       </div>
     </b-modal>
     <!-- Products details modal::end -->
+
+    <!-- approve modal::begin -->
+    <b-modal
+      id="approve-modal"
+      centered
+      hide-footer
+      size="lg"
+      title="Shipping Details"
+      no-close-on-backdrop
+    >
+      <div>
+        <!--begin::Group-->
+        <div class="form-group row fv-plugins-icon-container">
+          <label class="col-xl-3 col-lg-3 col-form-label">Zip code</label>
+          <div class="col-lg-9 col-xl-9">
+            <div class="input-group input-group-solid input-group-lg">
+              <input
+                type="text"
+                class="form-control form-control-solid form-control-lg"
+                name="zip_code"
+                placeholder="zip_code"
+                :value="selectedZipCode"
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+        <!--end::Group-->
+
+        <!--begin::Group-->
+        <div class="form-group row fv-plugins-icon-container">
+          <label class="col-xl-3 col-lg-3 col-form-label"
+            >Shipping Company</label
+          >
+          <div class="col-lg-9 col-xl-9">
+            <b-dropdown
+              :text="
+                shippingCompanies.length > 0
+                  ? 'Select a shipping company'
+                  : 'No shipping companies for this pincode'
+              "
+              variant="outline-primary"
+              class="w-100"
+              menu-class="w-100"
+            >
+              <b-dropdown-item
+                v-for="(company, companyIndex) in shippingCompanies"
+                :key="companyIndex"
+                @click="selectShippingCompany(company)"
+              >
+                {{ company.courier_name }}
+              </b-dropdown-item>
+            </b-dropdown>
+          </div>
+        </div>
+        <!--end::Group-->
+
+        <!--begin::Group-->
+        <div class="form-group row fv-plugins-icon-container">
+          <label class="col-xl-3 col-lg-3 col-form-label"
+            >Shipping Charges</label
+          >
+          <div class="col-lg-9 col-xl-9">
+            <div class="input-group input-group-solid input-group-lg">
+              <input
+                type="text"
+                class="form-control form-control-solid form-control-lg"
+                name="shipping charges"
+                placeholder="Shipping Charges"
+                :value="shippingCharges"
+                disabled
+              />
+            </div>
+          </div>
+        </div>
+        <!--end::Group-->
+      </div>
+      <div class="w-100 mt-5 text-center">
+        <div class="btn btn-danger" @click="$bvModal.hide('shipping-modal')">
+          Close
+        </div>
+        <div class="btn btn-primary ml-5 px-15" @click="payAmount">Pay</div>
+      </div>
+    </b-modal>
+    <!-- approve modal::end -->
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import axios from "axios";
+import Swal from "sweetalert2";
 export default {
   name: "widget-2",
   data() {
@@ -452,26 +551,34 @@ export default {
       list: [],
       shippingDetails: {},
       productDetails: [],
-      trackingDetails: {},
-      trackURL: "",
-      shipmentTrackActivities: [],
+      shippingCharges: "",
+      selectedZipCode: "",
+      shippingCompanies: [],
+      selectedShippingCompany: "",
+      selectedItemId: "",
+      selectedCourierId: "",
+      walletAmount: "",
+      razorPayInitData: {},
     };
   },
   created() {
-    axios
-      .get(`/wix/getWixOrders/${this.currentUser.id}`)
-      .then(({ data }) => {
-        console.log(data);
-        this.list = data.ordersData;
-      })
-      .catch((resp) => {
-        console.log(resp);
-      });
+    this.getWixOrders();
   },
   computed: {
     ...mapGetters(["currentUser"]),
   },
   methods: {
+    getWixOrders() {
+      axios
+        .get(`/wix/getWixOrders/${this.currentUser.id}`)
+        .then(({ data }) => {
+          // console.log(data);
+          this.list = data.ordersData;
+        })
+        .catch((resp) => {
+          console.log(resp);
+        });
+    },
     openShippingDetails(item) {
       console.log(item);
       this.shippingDetails = item.customerShipping_details[0];
@@ -482,28 +589,228 @@ export default {
       console.log(this.productDetails);
       this.$bvModal.show("products-details-modal");
     },
-    trackShipment(awb_id) {
+    rejectOrder(item) {
+      console.log(item);
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Reject",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let postData = {
+            approveData: {
+              id: item._id,
+              shipping_charges: item.shipping_charges,
+              partner_status: "rejected",
+              courier_id: item.courier_id,
+            },
+          };
+          axios
+            .post(`/wix/setOrderStatus`, postData)
+            .then(({ data }) => {
+              this.getWixOrders();
+            })
+            .catch((resp) => {
+              console.error(resp);
+              Swal.fire({
+                title: "Error!",
+                text: "Couldn't reject the order. Please try again later.",
+                icon: "warning",
+                confirmButtonText: "Close",
+              });
+            });
+        }
+      });
+    },
+    approveOrder(item) {
+      this.selectedZipCode = item.customerShipping_details[0].zip_code;
+      this.selectedItemId = item._id;
       axios
-        .get(`/shiprocketGenrate/trackOrderShip/${awb_id}`)
+        .get(
+          `/customerShipping/getShipRocketCharges/${item.customerShipping_details[0].zip_code}/${item.total_weight}`
+        )
         .then(({ data }) => {
-          console.log(data);
-          this.trackingDetails =
-            data.responseData.tracking_data.shipment_track[0];
+          this.shippingCompanies = data.data.available_courier_companies;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+      this.$bvModal.show("approve-modal");
+    },
+    selectShippingCompany(company) {
+      console.log(company);
+      this.selectedShippingCompany = company;
+      this.shippingCharges = company.rate;
+      this.selectedCourierId = company.courier_company_id;
+    },
+    deductAmount() {
+      let self = this;
+      let postData = {
+        approveData: {
+          id: self.selectedItemId,
+          shipping_charges: self.shippingCharges,
+          partner_status: "approved",
+          courier_id: self.selectedCourierId,
+        },
+      };
+      axios
+        .post(`/wix/setOrderStatus`, postData)
+        .then(({ data }) => {
+          self.getWixOrders();
 
-          this.shipmentTrackActivities =
-            data.responseData.tracking_data.shipment_track_activities;
-
-          this.trackURL = data.responseData.tracking_data.track_url;
-          this.$bvModal.show("tracking-details-modal");
+          axios
+            .post(`/customerWallet/debitWallet`, {
+              customer_data: {
+                customer_id: self.currentUser.id,
+                amount: self.shippingCharges,
+              },
+            })
+            .then(({ data }) => {
+              Swal.fire(
+                "Order Accepted",
+                "Transaction complete!",
+                "success"
+              ).then(() => {
+                window.location.reload();
+              });
+            })
+            .catch((resp) => {
+              console.error(resp);
+            });
         })
         .catch((resp) => {
           console.error(resp);
           Swal.fire({
             title: "Error!",
-            text: "Tracking data has not been updated yet. Please try again later.",
+            text: "Couldn't reject the order. Please try again later.",
             icon: "warning",
             confirmButtonText: "Close",
           });
+        });
+    },
+    addAmount() {
+      let amount = parseInt(this.walletAmount) * 100;
+
+      let data = {
+        insdata: {
+          customer_id: this.currentUser.id,
+          currency: "INR",
+          amount: amount,
+        },
+      };
+      axios
+        .post(`/customerWallet/razorPayInstantiate`, data)
+        .then(({ data }) => {
+          console.log(data);
+          this.razorPayInitData = data.savedhistoryData;
+          this.razorPayCheckout();
+        })
+        .catch((resp) => {
+          console.log(resp);
+          Swal.fire({
+            title: "Error!",
+            text: "Some error occurred while adding amount. Please try again.",
+            icon: "error",
+            confirmButtonText: "Close",
+          });
+        });
+    },
+    razorPayCheckout() {
+      let self = this;
+      let amount = parseInt(self.walletAmount) * 100;
+      // console.log(amount);
+      var options = {
+        key: "rzp_test_aAHglk8OS8HPRk", // Enter the Key ID generated from the Dashboard
+        amount: amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        currency: "INR",
+        name: self.currentUser.email,
+        // image: "https://example.com/your_logo",
+        order_id: self.razorPayInitData.payment_order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        handler: function (response) {
+          let addWalletData = {
+            walletData: {
+              customer_id: self.currentUser.id,
+              currency: "INR",
+              amount: self.walletAmount,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            },
+          };
+          axios
+            .post("/customerWallet/addWalletAmount", addWalletData)
+            .then(({ data }) => {
+              self.walletAmount = "";
+              self.deductAmount();
+            })
+            .catch((resp) => {
+              Swal.fire({
+                title: "Error!",
+                text: "Error adding amount to wallet. Please contact support for help",
+                icon: "error",
+                confirmButtonText: "Close",
+              }).then(() => {
+                self.walletAmount = "";
+              });
+            });
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+      // console.log("razorpay", options);
+      var rzp1 = new window.Razorpay(options);
+      rzp1.on("payment.failed", function (response) {
+        self.walletAmount = "";
+        Swal.fire({
+          title: "Error!",
+          text: response.error.description,
+          icon: "error",
+          confirmButtonText: "Close",
+        });
+      });
+      rzp1.open();
+    },
+    payAmount() {
+      let self = this;
+      axios
+        .get(`/customerWallet/getWalletbyid/${self.currentUser.id}`)
+        .then(({ data }) => {
+          if (Number(data.wallet.amount) >= Number(self.shippingCharges)) {
+            Swal.fire({
+              title: "Pay from wallet",
+              icon: "info",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Pay",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                self.deductAmount();
+              }
+            });
+          } else {
+            let remainingAmount =
+              Number(self.shippingCharges) - Number(data.wallet.amount);
+            self.walletAmount = remainingAmount;
+            Swal.fire({
+              title: "Add remaining amount to wallet and pay?",
+              text: "Wallet amount insufficient",
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Add amount and pay",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                self.addAmount();
+              }
+            });
+          }
         });
     },
   },
