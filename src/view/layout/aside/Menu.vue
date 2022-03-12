@@ -150,6 +150,7 @@
           </router-link>
 
           <li
+            v-if="custData.customer_wix"
             aria-haspopup="true"
             data-menu-toggle="hover"
             class="menu-item"
@@ -235,8 +236,26 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import ApiService from "@/core/services/api.service";
 export default {
   name: "KTMenu",
+  computed: {
+    ...mapGetters(["currentUser"]),
+  },
+  data() {
+    return {
+      custData: {},
+    };
+  },
+  created() {
+    ApiService.get(`/customers/getCustomerbyid?id=${this.currentUser.id}`).then(
+      ({ data }) => {
+        console.log(data);
+        this.custData = data.customerRecordData;
+      }
+    );
+  },
   methods: {
     hasActiveChildren(match) {
       return this.$route["path"].indexOf(match) !== -1;

@@ -30,7 +30,8 @@ export default {
     };
     ApiService.post(`/wix/finishInitialize`, postData)
       .then((data) => {
-        this.$router.push("/integrations/wix");
+        // window.close();
+        this.$router.push("/integrations/wix/dashboard");
       })
       .catch((resp) => {
         console.error(resp);

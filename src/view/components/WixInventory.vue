@@ -154,20 +154,20 @@
                       class="d-flex justify-content-between"
                       variant="primary"
                       :show="quantityUploadStatus === 'adding'"
-                      >Adding Images
+                      >Adding Quantities
                       <i class="fas fa-spinner fa-pulse text-white"></i
                     ></b-alert>
                     <b-alert
                       class="d-flex justify-content-between"
                       variant="success"
                       :show="quantityUploadStatus === 'added'"
-                      >Images Added<i class="far fa-check-circle text-white"></i
+                      >Quantities Added<i class="far fa-check-circle text-white"></i
                     ></b-alert>
                     <b-alert
                       class="d-flex justify-content-between"
                       variant="danger"
                       :show="quantityUploadStatus === 'failed'"
-                      >Adding Images Failed<i
+                      >Adding Quantities Failed<i
                         class="far fa-times-circle text-white"
                       ></i
                     ></b-alert>
@@ -305,7 +305,7 @@ export default {
       });
     },
     closeModal(i) {
-      $bvModal.hide(`add-product-modal-${i}`);
+      this.$bvModal.hide(`add-product-modal-${i}`);
       window.location.reload();
     },
   },
