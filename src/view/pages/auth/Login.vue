@@ -134,7 +134,6 @@ export default {
   name: "login",
   data() {
     return {
-      fromWixSuccess: false,
       form: {
         email: "",
         password: "",
@@ -190,6 +189,7 @@ export default {
       const submitButton = this.$refs["kt_login_signin_submit"];
       submitButton.classList.add("spinner", "spinner-light", "spinner-right");
 
+      let query = this.$route.query;
       // dummy delay
       setTimeout(() => {
         // send login request
@@ -197,8 +197,11 @@ export default {
           .dispatch(LOGIN, data)
           // go to which page after successfully login
           .then(() => {
-            if (this.fromWixSuccess) {
-              this.$router.push("/integrations/wix/success");
+            if (query?.code) {
+              this.$router.push({
+                path: "/integrations/wix/success",
+                query: query,
+              });
             } else {
               this.$router.push("/");
             }
@@ -216,13 +219,6 @@ export default {
     ...mapState({
       errors: (state) => state.auth.errors,
     }),
-  },
-  watch: {
-    $route(to, from) {
-      if (from.name === "wix-success") {
-        this.fromWixSuccess = true;
-      }
-    },
   },
 };
 </script>

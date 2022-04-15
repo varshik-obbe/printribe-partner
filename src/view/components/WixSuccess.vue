@@ -17,8 +17,10 @@ export default {
     ...mapGetters(["currentUser", "isAuthenticated"]),
   },
   created() {
+    let query = this.$route.query
     if (!this.isAuthenticated) {
-      this.$router.push("/login");
+      this.$router.push({path:"/login", query:query});
+      return;
     }
 
     let postData = {
