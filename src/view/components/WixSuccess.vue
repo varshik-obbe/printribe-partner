@@ -31,9 +31,11 @@ export default {
       },
     };
     ApiService.post(`/wix/finishInitialize`, postData)
-      .then((data) => {
+      .then(({data}) => {
         // window.close();
-        this.$router.push("/integrations/wix/dashboard");
+        // this.$router.push("/integrations/wix/dashboard");
+            window.location.href=`https://www.wix.com/installer/close-window?access_token=${data.token}`
+
       })
       .catch((resp) => {
         console.error(resp);
