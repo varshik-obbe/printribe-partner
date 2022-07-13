@@ -55,7 +55,7 @@ export default {
   created() {
     ApiService.get(`/customerInventory/getProducts/${this.currentUser.id}`)
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
         this.list = data.products;
       })
       .catch((resp) => {

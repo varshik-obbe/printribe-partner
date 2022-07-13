@@ -166,7 +166,7 @@ export default {
   created() {
     ApiService.get(`/customers/getCustomerbyid?id=${this.currentUser.id}`)
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
         this.profileData = data.customerRecordData;
       })
       .catch((resp) => {

@@ -233,7 +233,7 @@ export default {
       ApiService.get(`/customerWallet/getWalletbyid/${this.currentUser.id}`)
         .then(({ data }) => {
           this.walletData = data.wallet;
-          console.log(data);
+          // console.log(data);
         })
         .catch((resp) => {
           console.log(resp);
@@ -251,7 +251,7 @@ export default {
       };
       ApiService.post(`/customerWallet/razorPayInstantiate`, data)
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           this.razorPayInitData = data.savedhistoryData;
           this.razorPayCheckout();
         })
@@ -317,7 +317,7 @@ export default {
           color: "#3399cc",
         },
       };
-      console.log("razorpay", options);
+      // console.log("razorpay", options);
       var rzp1 = new window.Razorpay(options);
       rzp1.on("payment.failed", function (response) {
         self.$bvModal.hide("add-amount-modal");

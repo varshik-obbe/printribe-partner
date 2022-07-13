@@ -580,17 +580,17 @@ export default {
         });
     },
     openShippingDetails(item) {
-      console.log(item);
+      // console.log(item);
       this.shippingDetails = item.customerShipping_details[0];
       this.$bvModal.show("shipping-modal");
     },
     openProductsDetails(item) {
       this.productDetails = item.product_info;
-      console.log(this.productDetails);
+      // console.log(this.productDetails);
       this.$bvModal.show("products-details-modal");
     },
     rejectOrder(item) {
-      console.log(item);
+      // console.log(item);
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -642,7 +642,7 @@ export default {
       this.$bvModal.show("approve-modal");
     },
     selectShippingCompany(company) {
-      console.log(company);
+      // console.log(company);
       this.selectedShippingCompany = company;
       this.shippingCharges = company.rate;
       this.selectedCourierId = company.courier_company_id;
@@ -705,7 +705,7 @@ export default {
       axios
         .post(`/customerWallet/razorPayInstantiate`, data)
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           this.razorPayInitData = data.savedhistoryData;
           this.razorPayCheckout();
         })

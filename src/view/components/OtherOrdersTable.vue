@@ -463,7 +463,7 @@ export default {
     axios
       .get(`/orders/getOrders/${this.currentUser.id}`)
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
         this.list = data.orders;
       })
       .catch((resp) => {
@@ -475,12 +475,12 @@ export default {
   },
   methods: {
     openShippingDetails(item) {
-      console.log(item);
+      // console.log(item);
       this.shippingDetails = item.customerShipping_id;
       this.$bvModal.show("shipping-modal");
     },
     openProductsDetails(item) {
-      console.log(item);
+      // console.log(item);
       this.productDetails = item.product_info;
       this.$bvModal.show("products-details-modal");
     },

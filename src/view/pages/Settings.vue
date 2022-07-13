@@ -567,7 +567,7 @@ export default {
     };
   },
   created() {
-    console.log(this.currentUser);
+    // console.log(this.currentUser);
     this.partnerId = this.currentUser.id;
     // console.log(this.partnerId);
     ApiService.get(`/customers/getCustomerbyid?id=${this.partnerId}`)
