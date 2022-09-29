@@ -4,14 +4,7 @@
     <hr class="my-2 mx-auto" style=":#999 " />
 
     <div
-      class="
-        col-12 col-md-6 col-lg-4
-        mx-auto
-        py-2
-        ps-sm-5 ps-lg-6
-        order-2 order-md-1
-        my-4
-      "
+      class="col-12 col-md-6 col-lg-4 mx-auto py-2 ps-sm-5 ps-lg-6 order-2 order-md-1 my-4"
     >
       <div class="searchBox">
         <i class="fas fa-search searchIcon"></i>
@@ -31,6 +24,17 @@
           <i class="fas fa-times text-muted" style="font-size: 12px"></i>
         </span>
       </div>
+    </div>
+    <div
+      class="col-12 py-2 ps-sm-5 ps-lg-6 order-2 order-md-1 my-4"
+      style="text-align: right"
+    >
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://printribe-2021.web.app/howitworks"
+        >How it Works</a
+      >
     </div>
     <WixInventory :list="list" />
     <!-- <WixInventory/> -->
