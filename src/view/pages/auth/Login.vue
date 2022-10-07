@@ -87,13 +87,7 @@
 
         <!--begin::Action-->
         <div
-          class="
-            form-group
-            d-flex
-            flex-wrap
-            justify-content-between
-            align-items-center
-          "
+          class="form-group d-flex flex-wrap justify-content-between align-items-center"
         >
           <a
             href="#"
@@ -108,6 +102,19 @@
           >
             Sign In
           </button>
+        </div>
+        <div
+          class="form-group d-flex flex-wrap justify-content-between align-items-center"
+        >
+          <a
+            href="https://theprintribe.com/signup"
+            target="_blank"
+            rel="noreferrer noopener"
+            class="text-dark-60 text-hover-primary my-3 mr-2"
+            id="kt_signup_new"
+          >
+            new user?
+          </a>
         </div>
         <!--end::Action-->
       </b-form>
