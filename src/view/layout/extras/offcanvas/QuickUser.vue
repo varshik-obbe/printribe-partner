@@ -30,7 +30,7 @@
           mr-3
         "
       >
-        {{profileData.username}}
+        {{profileData.username || 'User'}}
       </span>
       <span class="symbol symbol-35 symbol-light-success">
         <!-- <img v-if="false" alt="Pic" :src="picture" /> -->

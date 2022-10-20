@@ -115,7 +115,10 @@
                     >
                       Track
                     </div>
-                    <div v-else class="btn btn-secondary disabled">Track</div>
+                    <div v-else>
+                      <span class="d-block font-weight-light font-size-xs">Waiting for Dispatch</span>
+                    <div class="btn btn-secondary disabled">Track</div>
+                    </div>
                   </span>
                 </td>
                 <!-- <td class="text-right pr-0">

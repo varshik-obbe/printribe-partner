@@ -47,6 +47,11 @@ export default new Router({
           component: () => import("@/view/pages/OtherOrders.vue")
         },
         {
+          path: "/invoices",
+          name: "invoices",
+          component: () => import("@/view/pages/Invoices.vue")
+        },
+        {
           path: "/products",
           name: "products",
           component: () => import("@/view/pages/Products.vue")
@@ -54,7 +59,7 @@ export default new Router({
         {
           path: "/add-product",
           name: "add-product",
-          beforeEnter() { window.open('https://printribe-2021.web.app/products', "_blank") },
+          beforeEnter() { window.open('https://theprintribe.com/products', "_blank") },
         },
         {
           path: "/integrations/shopify",

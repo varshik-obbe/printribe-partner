@@ -77,6 +77,25 @@
       </li>
     </router-link>
     <router-link
+      to="/invoices"
+      v-slot="{ href, navigate, isActive, isExactActive }"
+    >
+      <li
+        aria-haspopup="true"
+        data-menu-toggle="hover"
+        class="menu-item"
+        :class="[
+          isActive && 'menu-item-active',
+          isExactActive && 'menu-item-active',
+        ]"
+      >
+        <a :href="href" class="menu-link" @click="navigate">
+          <i class="menu-icon fas fa-shopping-bag"></i>
+          <span class="menu-text">Invoices</span>
+        </a>
+      </li>
+    </router-link>
+    <router-link
       to="/products"
       v-slot="{ href, navigate, isActive, isExactActive }"
     >

@@ -25,25 +25,26 @@
         </p>
       </div>
 
+      <!-- Google Login::begin -->
+      <GoogleLogin
+        :params="params"
+        :onSuccess="onSuccess"
+        :onFailure="onFailure"
+        class="w-100 border border-dark rounded py-3"
+      >
+        <img src="/media/google-logo.png" style="height: 20px" class="mr-3" />
+        Sign in with Google
+      </GoogleLogin>
+
+      <!-- Google Login::end -->
+
+      <div class="my-5 d-flex align-items-center">
+        <hr class="w-100" />
+        <span class="mx-3">or</span>
+        <hr class="w-100" />
+      </div>
       <!--begin::Form-->
       <b-form class="form" @submit.stop.prevent="onSubmit">
-        <!-- <div role="alert" class="alert alert-info">
-          <div class="alert-text">
-            Use account <strong>admin@demo.com</strong> and password
-            <strong>demo</strong> to continue.
-          </div>
-        </div> -->
-
-        <!-- <div
-          role="alert"
-          v-bind:class="{ show: errors.length }"
-          class="alert fade alert-danger"
-        >
-          <div class="alert-text" v-for="(error, i) in errors" :key="i">
-            {{ error }}
-          </div>
-        </div> -->
-
         <b-form-group
           id="example-input-group-1"
           label=""
@@ -87,7 +88,13 @@
 
         <!--begin::Action-->
         <div
-          class="form-group d-flex flex-wrap justify-content-between align-items-center"
+          class="
+            form-group
+            d-flex
+            flex-wrap
+            justify-content-between
+            align-items-center
+          "
         >
           <a
             href="#"
@@ -104,7 +111,13 @@
           </button>
         </div>
         <div
-          class="form-group d-flex flex-wrap justify-content-between align-items-center"
+          class="
+            form-group
+            d-flex
+            flex-wrap
+            justify-content-between
+            align-items-center
+          "
         >
           <a
             href="https://theprintribe.com/signup"
@@ -133,18 +146,31 @@
 <script>
 import { mapState } from "vuex";
 import { LOGIN, LOGOUT } from "@/core/services/store/auth.module";
-
+import GoogleLogin from "vue-google-login";
 import { validationMixin } from "vuelidate";
 import { email, minLength, required } from "vuelidate/lib/validators";
 export default {
   mixins: [validationMixin],
   name: "login",
+  components: {
+    GoogleLogin,
+  },
   data() {
     return {
       form: {
         email: "",
         password: "",
         role: "customer",
+      },
+      params: {
+        client_id:
+          "46834513654-iea0lq8m5t6vksausg1ssh8ktk62vnlu.apps.googleusercontent.com",
+      },
+      // only needed if you want to render the button with the google ui
+      renderParams: {
+        width: 250,
+        height: 50,
+        longtitle: true,
       },
     };
   },
@@ -220,6 +246,47 @@ export default {
           "spinner-right"
         );
       }, 2000);
+    },
+    onSuccess(googleUser) {
+      console.log(googleUser);
+
+      // This only gets the user information: id, name, imageUrl and email
+      console.log(googleUser.getBasicProfile());
+      let user = googleUser.getBasicProfile();
+      const data = {
+        credentials: {
+          email: user.Tv,
+          password: user.OX,
+          role: this.form.role,
+        },
+      };
+
+      // clear existing errors
+      this.$store.dispatch(LOGOUT);
+
+      // set spinner to submit button
+      const submitButton = this.$refs["kt_login_signin_submit"];
+      submitButton.classList.add("spinner", "spinner-light", "spinner-right");
+
+      // dummy delay
+      setTimeout(() => {
+        // send login request
+        this.$store
+          .dispatch(LOGIN, data)
+          // go to which page after successfully login
+          .then(() => {
+            this.$router.push("/");
+          });
+
+        submitButton.classList.remove(
+          "spinner",
+          "spinner-light",
+          "spinner-right"
+        );
+      }, 2000);
+    },
+    onFailure(err) {
+      console.log(err);
     },
   },
   computed: {
