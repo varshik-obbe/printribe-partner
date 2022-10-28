@@ -251,12 +251,16 @@ export default {
       console.log(googleUser);
 
       // This only gets the user information: id, name, imageUrl and email
-      console.log(googleUser.getBasicProfile());
+      // console.log(googleUser.getBasicProfile());
+      // console.log(googleUser.getBasicProfile().getId());
+      // console.log(googleUser.getBasicProfile().getEmail());
+      const email = googleUser.getBasicProfile().getEmail()
+      const Id = googleUser.getBasicProfile().getId()
       let user = googleUser.getBasicProfile();
       const data = {
         credentials: {
-          email: user.Tv,
-          password: user.OX,
+          email: email,
+          password: Id,
           role: this.form.role,
         },
       };

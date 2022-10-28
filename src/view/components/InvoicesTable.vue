@@ -37,9 +37,15 @@
                       mb-1
                       font-size-lg
                     "
-                    :style="{color:item.customerShipping_id ? 'black' : 'red'}"
+                    :style="{
+                      color: item.customerShipping_id ? 'black' : 'red',
+                    }"
                   >
-                    {{ item.customerShipping_id && item.customerShipping_id.fullname || 'N/A' }}
+                    {{
+                      (item.customerShipping_id &&
+                        item.customerShipping_id.fullname) ||
+                      "N/A"
+                    }}
                   </span>
                 </td>
 
@@ -63,11 +69,17 @@
                   </span>
                 </td>
                 <td class="text-center">
+                  <a :href="item.pdf_link" target="_blank" download>
                   <span
                     class="text-dark-75 font-weight-bolder d-block font-size-lg"
                   >
-                    <div class="btn btn-info">Download</div>
+                    <div
+                      class="btn btn-info"
+                    >
+                      Download
+                    </div>
                   </span>
+                  </a>
                 </td>
                 <!-- <td class="text-right pr-0">
                   <a href="#" class="btn btn-icon btn-light btn-sm mx-3">
@@ -261,7 +273,6 @@ export default {
     axios
       .get(`/orders/getCustomerOngoingOrders/${this.currentUser.id}`)
       .then(({ data }) => {
-        console.log(data);
         this.list = data.orders;
       })
       .catch((resp) => {

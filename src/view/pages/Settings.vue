@@ -240,7 +240,7 @@
                           <!--begin::Group-->
                           <div class="form-group row fv-plugins-icon-container">
                             <label class="col-xl-3 col-lg-3 col-form-label"
-                              >GST</label
+                              ><span style="color: red">*</span> GST</label
                             >
                             <div class="col-lg-9 col-xl-9">
                               <div
@@ -433,6 +433,10 @@
                           <!--begin::Group-->
                           <div class="form-group row fv-plugins-icon-container">
                             <label class="col-xl-3 col-lg-3 col-form-label"
+                              ><span
+                                style="color: red"
+                                v-if="form.remittance_type === 'bank'"
+                                >* </span
                               >A/C Number</label
                             >
                             <div class="col-lg-9 col-xl-9">
@@ -459,6 +463,10 @@
                           <!--begin::Group-->
                           <div class="form-group row fv-plugins-icon-container">
                             <label class="col-xl-3 col-lg-3 col-form-label"
+                              ><span
+                                style="color: red"
+                                v-if="form.remittance_type === 'bank'"
+                                >* </span
                               >IFSC</label
                             >
                             <div class="col-lg-9 col-xl-9">
@@ -485,7 +493,12 @@
                           <!--begin::Group-->
                           <div class="form-group row fv-plugins-icon-container">
                             <label class="col-xl-3 col-lg-3 col-form-label"
-                              >Bank Name</label
+                              ><span
+                                style="color: red"
+                                v-if="form.remittance_type === 'bank'"
+                                >*
+                              </span>
+                              Bank Name</label
                             >
                             <div class="col-lg-9 col-xl-9">
                               <div
@@ -507,6 +520,49 @@
                               </div>
                             </div>
                           </div>
+                          <!--end::Group-->
+                          <!--begin::Group-->
+                          <b-form-group v-slot="{ ariaDescribedby }">
+                            <div class="row">
+                              <div class="col-4">
+                                <label class="col-form-label"
+                                  >Remittance Type</label
+                                >
+                              </div>
+                              <div
+                                class="
+                                  col-4
+                                  d-flex
+                                  justify-content-start
+                                  align-items-center
+                                "
+                              >
+                                <b-form-radio
+                                  v-model="form.remittance_type"
+                                  :aria-describedby="ariaDescribedby"
+                                  name="bank-remit"
+                                  value="bank"
+                                  >Bank</b-form-radio
+                                >
+                              </div>
+                              <div
+                                class="
+                                  col-4
+                                  d-flex
+                                  justify-content-start
+                                  align-items-center
+                                "
+                              >
+                                <b-form-radio
+                                  v-model="form.remittance_type"
+                                  :aria-describedby="ariaDescribedby"
+                                  name="wallet-remit"
+                                  value="wallet"
+                                  >Wallet</b-form-radio
+                                >
+                              </div>
+                            </div>
+                          </b-form-group>
                           <!--end::Group-->
                         </div>
 
@@ -562,18 +618,20 @@ export default {
         city: "",
         state: "",
         country: "India",
+        remittance_type: "",
       },
       partnerId: "",
     };
   },
   created() {
-    // console.log(this.currentUser);
     this.partnerId = this.currentUser.id;
-    // console.log(this.partnerId);
     ApiService.get(`/customers/getCustomerbyid?id=${this.partnerId}`)
       .then(({ data }) => {
-        // console.log(data.customerRecordData);
-        this.form = data.customerRecordData;
+        for(var key of Object.keys(data.customerRecordData)){
+          if(this.form.hasOwnProperty(key)){
+            this.form[key] = data.customerRecordData[key];
+          }
+        }
       })
       .catch((resp) => {
         console.log(resp);
@@ -587,29 +645,54 @@ export default {
   },
   methods: {
     submitForm() {
-      // console.log(this.form);
-      ApiService.put(`/customers/updatecustomer?id=${this.partnerId}`, {
-        data: this.form,
-      })
-        .then(({ data }) => {
-          // console.log(data);
-          Swal.fire({
-            title: "Partner Info Updated!",
-            icon: "success",
-            confirmButtonText: "Okay",
-          }).then(() => {
-            // this.$router.back();
-          });
-        })
-        .catch((resp) => {
-          console.log(resp);
+      const self = this;
+      if (self.form.gst === "") {
+        Swal.fire({
+          title: "Error!",
+          text: "Please Fill GST field",
+          icon: "warning",
+          confirmButtonText: "Close",
+        });
+      } else {
+        console.log(self.form.remittance_type);
+        console.log(self.form.account_number);
+        console.log(self.form.ifsc_code);
+        console.log(self.form.bank_name);
+        if (
+          self.form.remittance_type === "bank" &&
+          (self.form.account_number === "" ||
+            self.form.ifsc_code === "" ||
+            self.form.bank_name === "")
+        ) {
           Swal.fire({
             title: "Error!",
-            text: "Some error occurred while fetching data. Please try again later.",
-            icon: "error",
+            text: "Please fill the Bank details",
+            icon: "warning",
             confirmButtonText: "Close",
           });
-        });
+        } else {
+          ApiService.put(`/customers/updatecustomer?id=${self.partnerId}`, {
+            data: self.form,
+          })
+            .then(({ data }) => {
+              // console.log(data);
+              Swal.fire({
+                title: "Partner Info Updated!",
+                icon: "success",
+                confirmButtonText: "Okay",
+              });
+            })
+            .catch((resp) => {
+              console.log(resp);
+              Swal.fire({
+                title: "Error!",
+                text: "Some error occurred while fetching data. Please try again later.",
+                icon: "error",
+                confirmButtonText: "Close",
+              });
+            });
+        }
+      }
     },
   },
   computed: {

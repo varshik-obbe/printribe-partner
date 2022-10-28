@@ -52,6 +52,21 @@ export default new Router({
           component: () => import("@/view/pages/Invoices.vue")
         },
         {
+          path: "/master-statement",
+          name: "master-statement",
+          component: () => import("@/view/pages/MasterStatement.vue")
+        },
+        {
+          path: "/recharges",
+          name: "recharges",
+          component: () => import("@/view/pages/Recharges.vue")
+        },
+        {
+          path: "/designs",
+          name: "designs",
+          component: () => import("@/view/pages/Designs.vue")
+        },
+        {
           path: "/products",
           name: "products",
           component: () => import("@/view/pages/Products.vue")

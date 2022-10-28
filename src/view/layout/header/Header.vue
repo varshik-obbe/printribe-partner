@@ -22,7 +22,7 @@
           v-bind:class="headerMenuClasses"
         >
           <!-- example static menu here -->
-          <KTMenu></KTMenu>
+          <!-- <KTMenu></KTMenu> -->
         </div>
       </div>
       <!-- end:: Header Menu -->
