@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h2 class="mb-5">Invoices</h2>
+    <h2 class="mb-5">Recharges</h2>
     <RechargesTable></RechargesTable>
   </div>
 </template>

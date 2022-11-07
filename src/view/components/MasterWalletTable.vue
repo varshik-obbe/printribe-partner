@@ -4,10 +4,10 @@
     <!--begin::Body-->
     <div class="card-body pt-3 pb-0">
       <!--begin::Table-->
-      <div
+      <!-- <div
         v-if="list.length > 0"
         class="table-responsive"
-        style="max-height: 70vh; overflow-y: scroll"
+        style="max-height: 70vh; min-height:30vh; overflow-y: scroll"
       >
         <table class="table table-borderless table-vertical-center">
           <thead>
@@ -84,7 +84,33 @@
             </template>
           </tbody>
         </table>
-      </div>
+      </div> -->
+      <b-table
+        v-if="walletItems.length > 0"
+        :items="walletItems"
+        :fields="fields"
+        :sort-by.sync="sortBy"
+        :sort-desc.sync="sortDesc"
+        sort-icon-left
+        responsive="sm"
+        class="text-center"
+      >
+        <template v-slot:cell(date)="{ item }">
+          <span>{{ getDate(item.date) }}</span>
+        </template>
+        <template v-slot:cell(amount)="{ item }">
+          <span>₹{{ item.amount }}</span>
+        </template>
+        <template v-slot:cell(payment_status)="{ item }">
+          <span
+            :style="{
+              color: item.payment_status === 'success' ? 'green' : 'red',
+            }"
+          >
+            {{ item.payment_status === "success" ? "Credited" : "Debited" }}
+          </span>
+        </template>
+      </b-table>
       <div v-else class="my-5 text-center">No orders</div>
 
       <!--end::Table-->
@@ -97,8 +123,21 @@
 <script>
 export default {
   name: "widget-2",
-  props: ["list"],
-    methods: {
+  props: ["walletItems"],
+  data() {
+    return {
+      sortBy: "date",
+      sortDesc: false,
+      fields: [
+        { key: "id", sortable: true },
+        { key: "payment_order_id", sortable: true },
+        { key: "date", sortable: true },
+        { key: "amount", sortable: true },
+        { key: "payment_status", sortable: true },
+      ],
+    };
+  },
+  methods: {
     getDate(date) {
       const today = new Date(date);
       const yyyy = today.getFullYear();

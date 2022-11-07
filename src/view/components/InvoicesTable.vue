@@ -4,7 +4,7 @@
     <!--begin::Body-->
     <div class="card-body pt-3 pb-0">
       <!--begin::Table-->
-      <div v-if="list.length > 0" class="table-responsive">
+      <!-- <div v-if="list.length > 0" class="table-responsive">
         <table class="table table-borderless table-vertical-center">
           <thead>
             <tr>
@@ -70,41 +70,53 @@
                 </td>
                 <td class="text-center">
                   <a :href="item.pdf_link" target="_blank" download>
-                  <span
-                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
-                  >
-                    <div
-                      class="btn btn-info"
+                    <span
+                      class="
+                        text-dark-75
+                        font-weight-bolder
+                        d-block
+                        font-size-lg
+                      "
                     >
-                      Download
-                    </div>
-                  </span>
+                      <div class="btn btn-info">Download</div>
+                    </span>
                   </a>
                 </td>
-                <!-- <td class="text-right pr-0">
-                  <a href="#" class="btn btn-icon btn-light btn-sm mx-3">
-                    <span class="svg-icon svg-icon-md svg-icon-primary">
-                      <inline-svg
-                        src="media/svg/icons/Communication/Write.svg"
-                      ></inline-svg>
-                    </span>
-                  </a>
-                  <a href="#" class="btn btn-icon btn-light btn-sm">
-                    <span class="svg-icon svg-icon-md svg-icon-primary">
-                      <inline-svg
-                        src="media/svg/icons/General/Trash.svg"
-                      ></inline-svg>
-                    </span>
-                  </a>
-                </td> -->
               </tr>
             </template>
           </tbody>
         </table>
-      </div>
-      <div v-else class="my-5 text-center">No orders</div>
-
+      </div> -->
+      <b-table
+        v-if="items.length > 0"
+        :items="items"
+        :fields="fields"
+        :sort-by.sync="sortBy"
+        :sort-desc.sync="sortDesc"
+        sort-icon-left
+        responsive="sm"
+        class="text-center"
+      >
+        <template v-slot:cell(total_price)="{ item }">
+          <span>₹{{ item.total_price }}</span>
+        </template>
+        <template v-slot:cell(product_details)="{ item }">
+          <span
+            ><div class="btn btn-primary" @click="openProductsDetails(item)">
+              Open
+            </div></span
+          >
+        </template>
+        <template v-slot:cell(download)="{ item }">
+          <a :href="item.pdf_link" target="_blank" download>
+            <span class="text-dark-75 font-weight-bolder d-block font-size-lg">
+              <div class="btn btn-info">Download</div>
+            </span>
+          </a>
+        </template>
+      </b-table>
       <!--end::Table-->
+      <div v-else class="my-5 text-center">No orders</div>
     </div>
     <!--end::Body-->
     <!--end::Advance Table Widget 2-->
@@ -262,11 +274,16 @@ export default {
   data() {
     return {
       list: [],
-      shippingDetails: {},
       productDetails: [],
-      trackingDetails: {},
-      trackURL: "",
-      shipmentTrackActivities: [],
+      sortBy: "total_price",
+      sortDesc: false,
+      fields: [
+        { key: "total_price", sortable: true },
+        { key: "customer_name", sortable: true },
+        { key: "product_details", sortable: false },
+        { key: "download", sortable: false },
+      ],
+      items: [],
     };
   },
   created() {
@@ -274,6 +291,16 @@ export default {
       .get(`/orders/getCustomerOngoingOrders/${this.currentUser.id}`)
       .then(({ data }) => {
         this.list = data.orders;
+        this.list.forEach((item) => {
+          this.items.push({
+            total_price: item.total_price,
+            customer_name: item.customerShipping_id
+              ? item.customerShipping_id.fullname
+              : "N/A",
+            product_info: item.product_info,
+            pdf_link: item.pdf_link,
+          });
+        });
       })
       .catch((resp) => {
         console.log(resp);

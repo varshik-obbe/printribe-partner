@@ -4,7 +4,7 @@
     <!--begin::Body-->
     <div class="card-body pt-3 pb-0">
       <!--begin::Table-->
-      <div
+      <!-- <div
         v-if="list.length > 0"
         class="table-responsive"
       >
@@ -86,7 +86,33 @@
             </template>
           </tbody>
         </table>
-      </div>
+      </div> -->
+      <b-table
+        v-if="items.length > 0"
+        :items="items"
+        :fields="fields"
+        :sort-by.sync="sortBy"
+        :sort-desc.sync="sortDesc"
+        sort-icon-left
+        responsive="sm"
+        class="text-center"
+      >
+        <template v-slot:cell(date)="{ item }">
+          <span>{{ getDate(item.date) }}</span>
+        </template>
+        <template v-slot:cell(amount)="{ item }">
+          <span>₹{{ item.amount }}</span>
+        </template>
+        <template v-slot:cell(payment_status)="{ item }">
+          <span
+            :style="{
+              color: item.payment_status === 'success' ? 'green' : 'red',
+            }"
+          >
+            {{ item.payment_status === "success" ? "Credited" : "Debited" }}
+          </span>
+        </template>
+      </b-table>
       <div v-else class="my-5 text-center">No orders</div>
 
       <!--end::Table-->
@@ -104,6 +130,16 @@ export default {
   data() {
     return {
       list: [],
+      sortBy: "date",
+      sortDesc: false,
+      fields: [
+        { key: "id", sortable: true },
+        { key: "payment_order_id", sortable: true },
+        { key: "date", sortable: true },
+        { key: "amount", sortable: true },
+        { key: "payment_status", sortable: true },
+      ],
+      items: [],
     };
   },
   created() {
@@ -111,6 +147,15 @@ export default {
       .get(`/customerWallet/getWalletHistory/${this.currentUser.id}`)
       .then(({ data }) => {
         this.list = data.historyData;
+        this.list.forEach((item) => {
+          this.items.push({
+            id: item._id,
+            payment_order_id: item.payment_order_id,
+            date: item.createdAt,
+            amount: item.amount,
+            payment_status: item.payment_status,
+          });
+        });
       })
       .catch((resp) => {
         console.log(resp);

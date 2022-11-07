@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <h2 class="mb-5">Invoices</h2>
-    <MasterOrdersTable :list="orders"></MasterOrdersTable>
-    <MasterWalletTable :list="wallet"></MasterWalletTable>
+    <h2 class="mb-5">Master Statement</h2>
+    <MasterOrdersTable :orderItems="orderItems"></MasterOrdersTable>
+    <MasterWalletTable :walletItems="walletItems"></MasterWalletTable>
   </div>
 </template>
 
@@ -19,7 +19,9 @@ export default {
   data() {
     return {
       orders: [],
-      wallet:[]
+      wallet: [],
+      orderItems: [],
+      walletItems: [],
     };
   },
   created() {
@@ -27,7 +29,25 @@ export default {
       .get(`/orders/getCustomerStatement/${this.currentUser.id}`)
       .then(({ data }) => {
         this.orders = data.statement.orders;
+        this.orders.forEach((item) => {
+          this.orderItems.push({
+            order_id: item._id,
+            customer_email: item.customer_email,
+            total_price: item.total_price,
+            shipping_charges: item.shipping_charges,
+            date: item.createdAt,
+          });
+        });
         this.wallet = data.statement.walletHistory;
+        this.wallet.forEach((item) => {
+          this.walletItems.push({
+            id: item._id,
+            payment_order_id: item.payment_order_id,
+            date: item.createdAt,
+            amount: item.amount,
+            payment_status: item.payment_status,
+          });
+        });
       })
       .catch((resp) => {
         console.log(resp);

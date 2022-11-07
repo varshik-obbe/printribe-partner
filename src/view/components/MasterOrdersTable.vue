@@ -4,7 +4,7 @@
     <!--begin::Body-->
     <div class="card-body pt-3 pb-0">
       <!--begin::Table-->
-      <div v-if="list.length > 0" class="table-responsive" style="max-height:70vh; overflow-y:scroll;">
+      <!-- <div v-if="list.length > 0" class="table-responsive" style="max-height:70vh; min-height:30vh; overflow-y:scroll;">
         <table class="table table-borderless table-vertical-center">
           <thead>
             <tr>
@@ -78,7 +78,27 @@
             </template>
           </tbody>
         </table>
-      </div>
+      </div> -->
+      <b-table
+        v-if="orderItems.length > 0"
+        :items="orderItems"
+        :fields="fields"
+        :sort-by.sync="sortBy"
+        :sort-desc.sync="sortDesc"
+        sort-icon-left
+        responsive="sm"
+        class="text-center"
+      >
+        <template v-slot:cell(total_price)="{ item }">
+          <span>₹{{ item.total_price }}</span>
+        </template>
+        <template v-slot:cell(shipping_charges)="{ item }">
+          <span>₹{{ item.shipping_charges }}</span>
+        </template>
+        <template v-slot:cell(date)="{ item }">
+          <span>{{ getDate(item.date) }}</span>
+        </template>
+      </b-table>
       <div v-else class="my-5 text-center">No orders</div>
 
       <!--end::Table-->
@@ -91,7 +111,20 @@
 <script>
 export default {
   name: "widget-2",
-  props:['list'],
+  props: ["orderItems"],
+  data() {
+    return {
+      sortBy: "date",
+      sortDesc: false,
+      fields: [
+        { key: "order_id", sortable: true },
+        { key: "customer_email", sortable: true },
+        { key: "total_price", sortable: true },
+        { key: "shipping_charges", sortable: true },
+        { key: "date", sortable: true },
+      ],
+    };
+  },
   methods: {
     getDate(date) {
       const today = new Date(date);
