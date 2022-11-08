@@ -32,9 +32,12 @@
               <th class="p-0 h5" style="min-width: 200px; text-align: center">
                 Products details
               </th>
+              <th class="p-0 h5" style="min-width: 200px; text-align: center">
+                Track return
+              </th>
             </tr>
           </thead>
-          <br><br>
+          <br /><br />
           <tbody>
             <template v-for="(item, i) in list">
               <tr v-bind:key="i">
@@ -109,6 +112,22 @@
                     >
                       Open
                     </div>
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span
+                    class="text-dark-75 font-weight-bolder d-block font-size-lg"
+                  >
+                      <!-- v-if="item.returned_awb && item.returned_awb != ''" -->
+                    <div
+                      class="btn btn-info"
+                      @click="trackShipment(item.returned_awb)"
+                    >
+                      Track
+                    </div>
+                    <!-- <div v-else>
+                    <div class="btn btn-secondary disabled">Track</div>
+                    </div> -->
                   </span>
                 </td>
               </tr>
@@ -427,6 +446,7 @@
                       {{ product.quantity }}
                     </span>
                   </td>
+                  
                 </tr>
               </template>
             </tbody>
@@ -483,6 +503,30 @@ export default {
       // console.log(item);
       this.productDetails = item.product_info;
       this.$bvModal.show("products-details-modal");
+    },
+    trackShipment(awb_id) {
+      axios
+        .get(`/shiprocketGenrate/trackOrderShip/${awb_id}`)
+        .then(({ data }) => {
+          // console.log(data);
+          this.trackingDetails =
+            data.responseData.tracking_data.shipment_track[0];
+
+          this.shipmentTrackActivities =
+            data.responseData.tracking_data.shipment_track_activities;
+
+          this.trackURL = data.responseData.tracking_data.track_url;
+          this.$bvModal.show("tracking-details-modal");
+        })
+        .catch((resp) => {
+          console.error(resp);
+          Swal.fire({
+            title: "Error!",
+            text: "Tracking data has not been updated yet. Please try again later.",
+            icon: "warning",
+            confirmButtonText: "Close",
+          });
+        });
     },
   },
 };

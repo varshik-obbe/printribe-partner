@@ -87,8 +87,10 @@
           </tbody>
         </table>
       </div> -->
+      
       <b-table
         v-if="items.length > 0"
+        striped
         :items="items"
         :fields="fields"
         :sort-by.sync="sortBy"
@@ -96,6 +98,7 @@
         sort-icon-left
         responsive="sm"
         class="text-center"
+        style="max-height: 68vh; min-height: 50vh; overflow-y: scroll"
       >
         <template v-slot:cell(date)="{ item }">
           <span>{{ getDate(item.date) }}</span>
@@ -148,13 +151,14 @@ export default {
       .then(({ data }) => {
         this.list = data.historyData;
         this.list.forEach((item) => {
+          if(item.payment_status === 'success'){
           this.items.push({
             id: item._id,
             payment_order_id: item.payment_order_id,
             date: item.createdAt,
             amount: item.amount,
             payment_status: item.payment_status,
-          });
+          });}
         });
       })
       .catch((resp) => {

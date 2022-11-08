@@ -81,6 +81,7 @@
       </div> -->
       <b-table
         v-if="orderItems.length > 0"
+        striped
         :items="orderItems"
         :fields="fields"
         :sort-by.sync="sortBy"
@@ -88,6 +89,7 @@
         sort-icon-left
         responsive="sm"
         class="text-center"
+        style="max-height:70vh; min-height:30vh; overflow-y:scroll;"
       >
         <template v-slot:cell(total_price)="{ item }">
           <span>₹{{ item.total_price }}</span>

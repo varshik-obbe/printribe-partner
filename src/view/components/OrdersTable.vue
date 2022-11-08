@@ -624,6 +624,7 @@
 <script>
 import { mapGetters } from "vuex";
 import axios from "axios";
+import Swal from "sweetalert2";
 export default {
   name: "widget-2",
   data() {

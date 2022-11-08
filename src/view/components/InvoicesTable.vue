@@ -89,6 +89,7 @@
       </div> -->
       <b-table
         v-if="items.length > 0"
+        striped
         :items="items"
         :fields="fields"
         :sort-by.sync="sortBy"

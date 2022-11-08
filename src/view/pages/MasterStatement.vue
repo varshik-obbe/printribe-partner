@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <h2 class="mb-5">Master Statement</h2>
+    <h3 class="mb-5">Order Items</h3>
     <MasterOrdersTable :orderItems="orderItems"></MasterOrdersTable>
+    <h3 class="mb-5">Wallet Items</h3>
     <MasterWalletTable :walletItems="walletItems"></MasterWalletTable>
   </div>
 </template>
@@ -40,13 +42,18 @@ export default {
         });
         this.wallet = data.statement.walletHistory;
         this.wallet.forEach((item) => {
-          this.walletItems.push({
-            id: item._id,
-            payment_order_id: item.payment_order_id,
-            date: item.createdAt,
-            amount: item.amount,
-            payment_status: item.payment_status,
-          });
+          if (
+            item.payment_status === "success" ||
+            item.payment_status === "debited"
+          ) {
+            this.walletItems.push({
+              id: item._id,
+              payment_order_id: item.payment_order_id,
+              date: item.createdAt,
+              amount: item.amount,
+              payment_status: item.payment_status,
+            });
+          }
         });
       })
       .catch((resp) => {

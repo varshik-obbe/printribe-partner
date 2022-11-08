@@ -85,15 +85,26 @@
           </tbody>
         </table>
       </div> -->
+
+      <div class="text-right">
+        <b-dropdown id="dropdown-filter" text="Filter" class="m-md-2">
+          <b-dropdown-item @click="filter = ''">All</b-dropdown-item>
+          <b-dropdown-item @click="filter = 'success'">Credited</b-dropdown-item>
+          <b-dropdown-item @click="filter = 'debited'">Debited</b-dropdown-item>
+        </b-dropdown>
+      </div>
       <b-table
         v-if="walletItems.length > 0"
+        striped
         :items="walletItems"
         :fields="fields"
+        :filter="filter"
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc"
         sort-icon-left
         responsive="sm"
         class="text-center"
+        style="max-height:70vh; min-height:30vh; overflow-y:scroll;"
       >
         <template v-slot:cell(date)="{ item }">
           <span>{{ getDate(item.date) }}</span>
@@ -128,6 +139,7 @@ export default {
     return {
       sortBy: "date",
       sortDesc: false,
+      filter: "",
       fields: [
         { key: "id", sortable: true },
         { key: "payment_order_id", sortable: true },
