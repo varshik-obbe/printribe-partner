@@ -12,7 +12,7 @@ export default {
     return {
       token: this.$route.query.token,
       appId: "488a03db-0706-4ba4-a9d7-f1e0831a51b6",
-      redirectUrl: "https://printribe-partner.web.app/integrations/wix/success",
+      redirectUrl: "https://partner.theprintribe.com/integrations/wix/success",
     };
   },
 
