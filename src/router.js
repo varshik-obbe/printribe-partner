@@ -42,6 +42,11 @@ export default new Router({
           component: () => import("@/view/pages/Orders.vue")
         },
         {
+          path: "/third-party-orders",
+          name: "third-party-orders",
+          component: () => import("@/view/pages/ThirdPartyOrders.vue")
+        },
+        {
           path: "/other-orders",
           name: "other-orders",
           component: () => import("@/view/pages/OtherOrders.vue")
