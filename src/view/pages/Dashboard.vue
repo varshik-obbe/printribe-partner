@@ -2,7 +2,7 @@
   <div>
     <!--begin::Dashboard-->
     <div class="row">
-      <div class="col-xxl-4">
+      <!-- <div class="col-xxl-4">
         <MixedWidget1></MixedWidget1>
       </div>
       <div class="col-xxl-4">
@@ -25,9 +25,12 @@
       </div>
       <div class="col-xxl-4 order-1 order-xxl-2">
         <ListWidget4></ListWidget4>
+      </div> -->
+      <div class="col-lg-12 col-xxl-12 order-1 order-xxl-2">
+        <orders-table dashboard='true'></orders-table>
       </div>
-      <div class="col-lg-12 col-xxl-4 order-1 order-xxl-2">
-        <ListWidget8></ListWidget8>
+      <div class="col-lg-12 col-xxl-12 order-1 order-xxl-2">
+        <MyProductsTable dashboard='true'></MyProductsTable>
       </div>
     </div>
     <!--end::Dashboard-->
@@ -45,6 +48,8 @@ import ListWidget8 from "@/view/content/widgets/list/Widget8.vue";
 import ListWidget9 from "@/view/content/widgets/list/Widget9.vue";
 import StatsWidget7 from "@/view/content/widgets/stats/Widget7.vue";
 import StatsWidget12 from "@/view/content/widgets/stats/Widget12.vue";
+import OrdersTable from '../components/OrdersTable.vue';
+import MyProductsTable from "@/view/components/MyProductsTable.vue";
 
 export default {
   name: "dashboard",
@@ -58,6 +63,8 @@ export default {
     ListWidget9,
     StatsWidget7,
     StatsWidget12,
+    OrdersTable,
+    MyProductsTable
   },
   mounted() {
     this.$store.dispatch(SET_BREADCRUMB, [{ title: "Dashboard" }]);

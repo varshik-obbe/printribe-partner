@@ -25,10 +25,19 @@
         </span>
       </div>
     </div>
+    
     <div
       class="col-12 py-2 ps-sm-5 ps-lg-6 order-2 order-md-1 my-4"
       style="text-align: right"
     >
+    <div class="design-card ">
+      <P>STARTER PLAN</P>
+      <h2>PAY PER LABEL</h2>
+      <h5>✓ No Monthly Subscription Fees</h5>
+      <h5>✓ Rs. 73.5 Per Label Fee</h5>
+      <h5>✓ Email And Live Chat Support</h5>
+    </div>
+
       <a
         target="_blank"
         rel="noopener noreferrer"
@@ -106,5 +115,14 @@ export default {
   color: rgb(82, 82, 82);
   -webkit-text-stroke: 1px white;
   font-size: 16px;
+}
+.design-card {
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background-color: #fff;
+  width: 300px;
+  text-align: left;
+  padding: 1%;
+  /* height:300px; */
 }
 </style>
