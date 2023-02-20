@@ -173,7 +173,7 @@
       </li>
     </router-link>
     <router-link
-      to="/products"
+      to="/products/my-products"
       v-slot="{ href, navigate, isActive, isExactActive }"
     >
       <li

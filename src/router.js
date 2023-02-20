@@ -72,7 +72,7 @@ export default new Router({
           component: () => import("@/view/pages/Designs.vue")
         },
         {
-          path: "/products",
+          path: "/products/my-products",
           name: "products",
           component: () => import("@/view/pages/Products.vue")
         },
