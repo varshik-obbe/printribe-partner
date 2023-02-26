@@ -3,7 +3,7 @@
     "version": "7.0.6",
     "private": true,
     "scripts": {
-        "serve": "vue-cli-service serve --port 8081",
+        "serve": " vue-cli-service serve --port 8081",
         "build": "vue-cli-service build",
         "firebase": "firebase deploy",
         "lint": "vue-cli-service lint",
@@ -24,6 +24,7 @@
         "deepmerge": "^4.2.2",
         "highlight.js": "^9.18.1",
         "line-awesome": "^1.3.0",
+        "md5-hash": "^1.0.1",
         "object-path": "^0.11.4",
         "perfect-scrollbar": "^1.5.0",
         "portal-vue": "^2.1.7",

@@ -1,6 +1,7 @@
 import ApiService from "@/core/services/api.service";
 import JwtService from "@/core/services/jwt.service";
 import Swal from 'sweetalert2'
+import md5 from 'md5-hash'
 
 // action types
 export const VERIFY_AUTH = "verifyAuth";
@@ -33,12 +34,43 @@ const getters = {
 const actions = {
   [LOGIN](context, credentials) {
     return new Promise(resolve => {
-      ApiService.post("/customers/login", credentials)
+      console.log(credentials,"credentials");
+    const payload= {saveData: {
+              password: credentials.credentials.password,
+              email: credentials.credentials.email,
+              role: credentials.credentials.role,
+            }}
+            console.log(payload,"data");
+
+//       var googleUser = googleUser.profileObj
+
+// axios
+//   .post('https://api.theprintribe.com/api/customers/customerGoogleSign', {
+//     saveData:  {
+//       password: googleUser.googleId,
+//       email: googleUser.email,
+//       role: this.form.role,
+//     },
+//   })
+//   .then((res))
+      ApiService.post("/customers/customerGoogleSign", payload)
         .then(({
           data
         }) => {
-          context.commit(SET_AUTH, data);
-          console.log(data);
+          console.log(data.savedData,'data....');
+          const token =  md5(data?.savedData?._id + data?.savedData?.email )
+const userdata={
+  email:data.savedData.email,
+  role:data.savedData.role,
+  id:data.savedData._id,
+  gst:data.savedData.gst,
+  password:data.savedData.password,
+}
+          const user={
+            token:token,
+            customer:userdata
+          }
+          context.commit(SET_AUTH, user);
           resolve(data);
         })
         .catch(({
@@ -122,6 +154,7 @@ const mutations = {
     state.errors = error;
   },
   [SET_AUTH](state, user) {
+    console.log(user,"user");
     state.isAuthenticated = true;
     state.user = user.customer;
     state.errors = {};
