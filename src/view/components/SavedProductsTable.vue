@@ -1,3 +1,7 @@
+
+
+
+
 <template>
   <!--begin::Advance Table Widget 2-->
   <div class="card card-custom card-stretch gutter-b">
@@ -17,9 +21,9 @@
               <th class="p-0 h5" style="min-width: 200px; text-align: center">
                 Design
               </th>
-              <!-- <th class="p-0 h5" style="min-width: 200px; text-align: center">
+              <th class="p-0 h5" style="min-width: 200px; text-align: center">
                 Description
-              </th> -->
+              </th>
               <th class="p-0 h5" style="min-width: 100px; text-align: center">
                 Price
               </th>
@@ -51,12 +55,12 @@
                       font-size-lg
                     "
                   >
-                    {{ item.title }}
+                    {{ item.name }}
                   </span>
                 </td>
                 <td class="pl-0 text-center">
                   <img
-                    :src="item.product_img"
+                    :src="item.img"
                     alt=""
                     style="height: 150px; object-fit: contain; max-width: 100%"
                   />
@@ -70,7 +74,7 @@
                   <span
                     class="text-dark-75 font-weight-bolder d-block font-size-lg"
                   >
-                    {{ item.design }}
+                    {{ item.description }}
                   </span>
                 </td> -->
 
@@ -85,14 +89,14 @@
                   <span
                     class="text-dark-75 font-weight-bolder d-block font-size-lg"
                   >
-                    {{ item.productsize }}
+                    {{ item.size }}
                   </span>
                 </td>
                 <td class="text-center">
                   <span
                     class="text-dark-75 font-weight-bolder d-block font-size-lg"
                   >
-                    {{ item.productcolor }}
+                    {{ item.color }}
                   </span>
                 </td>
                 <!-- <td class="text-center">
@@ -117,71 +121,9 @@
     </div>
 
     <!--end::Body-->
-    <!-- billing modal -->
-    <b-modal
-      id="billing-modal"
-      size="md"
-      title=""
-      hide-footer
-      @close="hideBillingModal"
-    >
-      <div class="container mb-5" v-if="orderData">
-        <div>
-          <ul>
-            <li style="display: flex; justify-content: space-between" class="product-price-list">
-              <span class="product-price-title">Product Price</span
-              ><span class="product-price">{{ product.price }}</span>
-            </li>
-            <li class="design-price-list" style="display: flex; justify-content: space-between">
-              <span class="design-price-title">Design Price</span
-              ><span class="design-price">{{ orderData.design_price }}</span>
-            </li>
-            <li
-            class="design-gst-price-list"
-              v-for="item in orderData.design_gst"
-              style="display: flex; justify-content: space-between"
-            >
-              <span class="design-gst-price-title">Desing {{item.gst_type.toUpperCase()}}({{ item.gst_percent }}%)</span
-              ><span class="design-gst-price">{{ item.gst_amount }}</span>
-            </li>
-            <li class="shipping-price-list" style="display: flex; justify-content: space-between">
-              <span class="shipping-price-title">Shipping Price</span
-              ><span class="shipping-price">{{ shippingData.shipping_charges }}</span>
-            </li>
-            <li
-            class="gst-price-list"
-              v-for="item in orderData.gst_details"
-              style="display: flex; justify-content: space-between"
-            >
-              <span class="gst-price-title"> {{item.gst_type.toUpperCase()}}({{ item.gst_percent }}%)</span
-              ><span class="gst-price">{{ item.gst_amount }}</span>
-            </li>
-            <li class="total-price-list" style="display: flex; justify-content: space-between">
-              <span class="total-price-title">Total</span
-              ><span class="total-price">{{ totalBillingAmount.toFixed(2) }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="d-flex justify-content-center">
-        <b-button variant="primary" @click="handleDetailsModal"
-          >Submit</b-button
-        >
-      </div></b-modal
-    >
     <!-- order now modal -->
     <b-modal id="order-now" size="md" title="" hide-footer @close="hideModal">
       <div class="container mb-5">
-        <span>
-          <input
-            class="form-check-input"
-            type="checkbox"
-            id="checkboxNoLabel"
-            :checked="savedShipAddress"
-            @change="handleCheckbox"
-          />
-          <span>Use Your Saved Address</span></span
-        >
         <div class="row">
           <div class="col-12 mb-5">
             <label for="quantity">Quantity</label>
@@ -224,6 +166,7 @@
               <option value="international">International shiping</option>
             </select>
             <p class="text-error">{{ shippingtypeErr }}</p>
+
           </div>
           <div class="col-6">
             <label for="quantity">Full Name</label>
@@ -236,6 +179,7 @@
               placeholder="Full Name"
             ></b-form-input>
             <p class="text-error">{{ fullNameErr }}</p>
+
           </div>
           <div class="col-6">
             <label for="state">State</label>
@@ -250,6 +194,7 @@
               </option>
             </select>
             <p class="text-error">{{ stateErr }}</p>
+
           </div>
           <div class="col-6">
             <label for="address1">Address line 1</label>
@@ -262,6 +207,7 @@
               placeholder="Address line 1"
             ></b-form-input>
             <p class="text-error">{{ address1Err }}</p>
+
           </div>
           <div class="col-6" v-if="!shippingDetails">
             <label for="company">Company</label>
@@ -274,6 +220,7 @@
               placeholder="Company"
             ></b-form-input>
             <p class="text-error">{{ companyErr }}</p>
+
           </div>
           <div class="col-6" v-else>
             <label for="company">Company</label>
@@ -293,6 +240,7 @@
               </option>
             </select>
             <p class="text-error">{{ companyErr }}</p>
+
           </div>
           <div class="col-6">
             <label for="address2">Address line 2</label>
@@ -316,7 +264,9 @@
               placeholder="Phone"
             ></b-form-input>
             <p class="text-error">{{ phoneErr }}</p>
+
           </div>
+          
           <div class="col-6">
             <label for="country">Country</label>
             <select
@@ -331,11 +281,11 @@
               </option>
             </select>
             <p class="text-error">{{ countryErr }}</p>
+
           </div>
           <div class="col-6">
             <label for="retailprice">Retail shipping price</label>
             <b-form-input
-            disabled
               type="text"
               name="retailprice"
               v-model="retailPrice"
@@ -355,6 +305,7 @@
               placeholder="Postal/Zip code"
             ></b-form-input>
             <p class="text-error">{{ postalcodeErr }}</p>
+
           </div>
           <div class="col-6">
             <label for="city">City</label>
@@ -367,6 +318,7 @@
               placeholder="City"
             ></b-form-input>
             <p class="text-error">{{ cityErr }}</p>
+
           </div>
           <div class="col-6">
             <label for="gst">GST</label>
@@ -378,7 +330,8 @@
               class="gst"
               placeholder="GST"
             ></b-form-input>
-            <p class="text-error">{{ gstErr }}</p>
+            <!-- <p class="text-error">{{ gstErr }}</p> -->
+
           </div>
         </div>
       </div>
@@ -413,10 +366,7 @@
 import { mapGetters } from "vuex";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Error from "../pages/error/Error.vue";
-
 export default {
-  components: { Error },
   name: "widget-2",
 
   data() {
@@ -431,12 +381,15 @@ export default {
       countryErr: "",
       gstErr: "",
       shippingtypeErr: null,
-      gst_details: [],
-      retail: 0,
+
+      retail:0,
+      visitorId:"",
       quantity: 1,
       totalBillingAmount: "",
       list: [],
+      gst_details:[],
       frontDesignImg: "",
+      design_gst:[],
       selected: null,
       fullName: "",
       shippingType: null,
@@ -457,14 +410,9 @@ export default {
       courierId: null,
       walletAmount: "",
       countries: [],
-      orderData: null,
-      shippingData: null,
-      visitorId: "",
-      custData:null,
-      savedShipAddress: false,
-      savedShippingData: null,
-      billingDetails: {},
-      razorPayInitData: {},
+      orderData:null,
+      shippingData:null,
+        razorPayInitData: {},
       stateList: [
         {
           value: null,
@@ -618,49 +566,6 @@ export default {
     };
   },
   watch: {
-    savedShipAddress(newaddress, oldaddress) {
-      if (newaddress) {
-        console.log(this.savedShippingData, "savedShippingData");
-        this.fullName = this.savedShippingData.fullname;
-        this.state = this.savedShippingData.state;
-        this.address1 = this.savedShippingData.address1;
-        this.company = this.savedShippingData.company;
-        this.address2 = this.savedShippingData.address2;
-        this.phone = this.savedShippingData.phone;
-        this.country = this.savedShippingData.country;
-        this.retailPrice = this.savedShippingData.shipping_charges;
-        this.postalcode = this.savedShippingData.zip_code;
-        this.city = this.savedShippingData.city;
-        this.gst = this.custData.gst;
-
-        this.fullNameErr = "";
-        this.address1Err = "";
-        this.cityErr = "";
-        this.countryErr = "";
-        this.stateErr = "";
-        this.shippingtypeErr = "";
-        this.postalcodeErr = "";
-        this.companyErr = "";
-        this.phoneErr = "";
-        this.gstErr=""
-      } else {
-        this.visitorId = "";
-
-        this.fullName = "";
-        this.state = "";
-        this.address1 = "";
-        this.company = "";
-        this.address2 = "";
-        this.mobile = "";
-        this.country = "";
-        this.retailPrice = "";
-        this.postalcode = "";
-        this.city = "";
-        this.phone="";
-        this.shippingType=null;
-        this.gst=""
-      }
-    },
     shippingType(newshipping, oldshipping) {
       if (newshipping == "domestic shipping") {
         this.country = "India";
@@ -719,20 +624,12 @@ export default {
     },
   },
   created() {
-    axios.get(`/customers/getCustomerbyid?id=${this.currentUser.id}`).then(
-      ({ data }) => {
-        // console.log(data);
-        this.custData = data.customerRecordData;
-        console.log(this.custData,"currentUser");
-
-      }
-    );
     axios
-      .get(`/customerInventory/getProducts/${this.currentUser.id}`)
+      .get(`/fabricDesigns/getSavedProductDesign/${this.currentUser.id}`)
       .then(({ data }) => {
         // console.log(data);
 
-        this.list = data.products;
+        this.list = data.designsSaved;
       })
       .catch((resp) => {
         console.log(resp);
@@ -743,38 +640,8 @@ export default {
     });
   },
   methods: {
-    async handleCheckbox() {
-      console.log("calll");
-     await axios
-                .get(
-                  "https://api.theprintribe.com/api/orders/getProductOrder/" +
-                    this.product.product_id+'/'+this.currentUser.id
-                )
-                .then(({ data }) => {
-                  console.log(data.orderData.visitor_id, "orderData");
-                  this.visitorId = data.orderData.visitor_id;
-                  this.shippingType=data.orderData.shipping_type
-                 
-                });
-          
-      // this.visitorId = localStorage.getItem("visitorId");
-    await   axios
-        .get("/customerShipping/getShippingById/" + this.visitorId)
-        .then(({ data }) => {
-          let shipData =data
-          console.log( shipData ,"sd")
-          this.shippingData = shipData.shipping_data
-;
-          this.savedShippingData = shipData.shipping_data
-;
-        });
-      console.log("this.>>>>>>>>>", this.savedShipAddress);
-   
-    this.savedShipAddress = !this.savedShipAddress;
-
-    },
     // pay amount start
-    payAmount() {
+    payAmount ()  {
       if (
         this.fullName === "" ||
         this.fullName.length < 2 ||
@@ -785,8 +652,7 @@ export default {
         this.company === "" ||
         this.state === "Select state" ||
         this.postalcode === "" ||
-        this.country === null ||
-        this.gst === ""
+        this.country === null 
       ) {
         if (this.fullName === "" || this.fullName.length < 2) {
           this.fullNameErr = "Full name is required";
@@ -822,9 +688,9 @@ export default {
           this.phoneErr = "Phone number invalid";
         }
 
-        if (this.gst === "") {
-          this.gstErr = "Gst field is required";
-        }
+        // if (this.gst === "") {
+        //   this.gstErr = "Gst field is required";
+        // }
       }
 
       // get product data start
@@ -838,154 +704,104 @@ export default {
         this.postalcode !== 0 &&
         this.city !== "" &&
         this.company !== "" &&
-        this.country !== "" &&
-        this.gst !==""
+        this.country !== "" 
       ) {
-        if (!this.visitorId) {
-          const visitor_id = Math.floor(Math.random() * 90000) + 10000;
-          localStorage.setItem("visitorId", visitor_id);
-          this.visitorId = visitor_id;
-        }
+      // get product data start
+console.log(this.product,'product')
+      const visitor_id = Math.floor(Math.random() * 90000) + 10000;
+      this.visitorId=visitor_id
 
-        // this.visitorId=visitor_id
-        const formData = {
-          shipping_data: {
-            customer_id: this.currentUser.id,
-            visitor_id: this.visitorId,
-            fullname: this.fullName,
-            state: this.state,
-            expectedDelivery: this.expectedDelivery,
-            shipping_type: this.shippingType,
-            address1: this.address1,
-            company: this.company,
-            address2: this.address2,
-            phone: this.phone,
-            country: this.country,
-            shipping_charges: Number(this.retailPrice),
-            zip_code: this.postalcode,
-            city: this.city,
+      const formData = {
+        shipping_data: {
+          customer_id: this.currentUser.id,
+          visitor_id: visitor_id,
+          fullname: this.fullName,
+          state: this.state,
+          expectedDelivery: this.expectedDelivery,
+          shipping_type: this.shippingType,
+          address1: this.address1,
+          company: this.company,
+          address2: this.address2,
+          phone: this.phone,
+          country: this.country,
+          shipping_charges: Number(this.retailPrice),
+          zip_code: this.postalcode,
+          city: this.city,
+        },
+      };
+
+      // console.log(formData,"form")
+      axios.post(`/customerShipping/addShipping`, formData).then(({ data }) => {
+        const shippingdata = data;
+        console.log(data.saveddata,"data.saveddata")
+        this.shippingData= data.saveddata
+        // this.product.product_id' product id
+        // this.product.product_id = "61e7a8af6b91a9d48b531e9c";
+        axios
+          .get(
+            "https://api.theprintribe.com/api/fabricDesigns/getSavedProductDesign/" +
+              this.currentUser.id
+          )
+          .then(({ data }) => {
+            const data_saved =  data.designsSaved.filter(item=>item._id==this.product._id) 
+            console.log(data_saved[0],"data_saved[0]")
+
+              this.orderData=data_saved[0]
+       const design_gst=[
+          {
+            gst_percent: String(Number(data_saved[0].design_gst)/2),
+            gst_amount: String(((Number(data_saved[0].design_gst)/2)*Number(data_saved[0].design_price))/100),
+            gst_type: "cgst",
           },
-        };
-        console.log(this.visitorId, "form");
-        if (!this.savedShipAddress) {
-          axios
-            .post(`/customerShipping/addShipping`, formData)
-            .then(({ data }) => {
-              const shippingdata = data;
-              this.shippingData = data.saveddata;
-              // this.product.product_id' product id
-              this.product.product_id = "6368d923e52f2e6c4cde19f5";
-              axios
-                .get(
-                  "https://api.theprintribe.com/api/orders/getProductOrder/" +
-                    this.product.product_id+'/'+this.currentUser.id
-                )
-                .then(({ data }) => {
-                  console.log(data.orderData.filter, "orderData");
-                  this.orderData = data.orderData;
-                  const design = data.orderData.design_gst.reduce(
-                    (prev, next) =>
-                      Number(prev.gst_amount) + Number(next.gst_amount)
-                  );
-                  const gst = data.orderData.gst_details.reduce(
-                    (prev, next) =>
-                      Number(prev.gst_percent) + Number(next.gst_percent)
-                  );
-                  this.gst_details = data.orderData.gst_details.map((item) => {
-                    return {
-                      gst_amount: (item.gst_amount =
-                        (Number(gst) *
-                          (Number(this.product.price) * Number(this.quantity) +
-                            Number(design) +
-                            Number(data.orderData.design_price))) /
-                        100),
+          {
+            gst_percent: String(Number(data_saved[0].design_gst)/2),
+            gst_amount: String(((Number(data_saved[0].design_gst)/2)*Number(data_saved[0].design_price))/100),
+            gst_type: "sgst",
+          },
+        ]
+        this.design_gst=design_gst
+        const gst_details=[
+          {
+            gst_percent: String(Number(data_saved[0].gst)/2),
+            gst_amount: String((Number(data_saved[0].gst)/2 *
+                    (Number(this.product.price) * Number(this.quantity) +
+                      ((Number(data_saved[0].design_gst)/2)*Number(data_saved[0].design_price))/100 +
+                      Number(data_saved[0].design_price))) /
+                    100 ),
+            gst_type: "cgst",
+          },
+          {
+            gst_percent: String(Number(data_saved[0].gst)/2),
+            gst_amount: String( (Number(data_saved[0].gst/2) *
+                    (Number(this.product.price) * Number(this.quantity) +
+                      ((Number(data_saved[0].design_gst)/2)*Number(data_saved[0].design_price))/100 +
+                      Number(data_saved[0].design_price))) /
+                    100 ),
+            gst_type: "sgst",
+          },
+        ]
+        this.gst_details=gst_details
 
-                      gst_percent: item.gst_percent,
-                      gst_type: item.gst_type,
-                      _id: item._id,
-                    };
-                  });
-                  const total =
-                    (Number(gst) *
-                      (Number(this.product.price) * Number(this.quantity) +
-                        Number(design) +
-                        Number(data.orderData.design_price))) /
-                      100 +
-                    Number(this.product.price) * Number(this.quantity) +
-                    Number(data.orderData.design_price) +
-                    Number(this.retailPrice) +
-                    Number(design);
-                  this.totalBillingAmount = total;
-                  console.log(
-                    total,
-                    design,
-                    gst,
-                    this.product.price,
-                    this.quantity,
-                    "===="
-                  );
-                });
-            });
-        } else {
-          this.product.product_id = "6368d923e52f2e6c4cde19f5";
-          axios
-            .get(
-              "https://api.theprintribe.com/api/orders/getProductOrder/" +
-                this.product.product_id+'/'+this.currentUser.id
-            )
-            .then(({ data }) => {
-              console.log(data.orderData.filter, "orderData");
-              this.orderData = data.orderData;
-              const design = data.orderData.design_gst.reduce(
-                (prev, next) =>
-                  Number(prev.gst_amount) + Number(next.gst_amount)
-              );
-              const gst = data.orderData.gst_details.reduce(
-                (prev, next) =>
-                  Number(prev.gst_percent) + Number(next.gst_percent)
-              );
-              this.gst_details = data.orderData.gst_details.map((item) => {
-                return {
-                  gst_amount: (item.gst_amount =
-                    (Number(gst) *
-                      (Number(this.product.price) * Number(this.quantity) +
-                        Number(design) +
-                        Number(data.orderData.design_price))) /
-                    100),
+            const design= String((Number(data_saved[0].design_gst)*Number(data_saved[0].design_price))/100)
+            // const gst= data.designsSaved.gst_details.reduce((prev,next)=>Number(prev.gst_amount)+Number(next.gst_amount))
+            const total =
+                  (Number(data_saved[0].gst) *
+                    (Number(this.product.price) * Number(this.quantity) +
+                      Number(design) +
+                      Number(data_saved[0].design_price))) /
+                    100 +
+                  Number(this.product.price) * Number(this.quantity) +
+                  Number(data_saved[0].design_price) +
+                  Number(this.retailPrice) +
+                  Number(design);
+                  console.log()
+                              this.totalBillingAmount=total
+            console.log(total, "====");
+          });
+      });
 
-                  gst_percent: item.gst_percent,
-                  gst_type: item.gst_type,
-                  _id: item._id,
-                };
-              });
-              const total =
-                (Number(gst) *
-                  (Number(this.product.price) * Number(this.quantity) +
-                    Number(design) +
-                    Number(data.orderData.design_price))) /
-                  100 +
-                Number(this.product.price) * Number(this.quantity) +
-                Number(data.orderData.design_price) +
-                Number(this.retailPrice) +
-                Number(design);
-              this.totalBillingAmount = total;
-              console.log(
-                total,
-                design,
-                gst,
-                this.product.price,
-                this.quantity,
-                "===="
-              );
-            });
-        }
-        this.$bvModal.show("billing-modal"); // get product data end
-      }
-    },
-    hideBillingModal(){
-      this.$bvModal.hide("billing-modal");
-    },
-    handleDetailsModal() {
+      // get product data end
+      console.log(this.totalBillingAmount,"totalBillingAmount")
       let self = this;
       axios
         .get(`/customerWallet/getWalletbyid/${self.currentUser.id}`)
@@ -1022,6 +838,7 @@ export default {
             });
           }
         });
+      }
     },
     deductAmount() {
       let self = this;
@@ -1033,38 +850,39 @@ export default {
       //     courier_id: self.courierId,
       //   },
       // };
-      // .post(`/orders/setThirdPartyOrderStatus`, postData)
-      // .then(({ data }) => {
       axios
-        .post(`/customerWallet/debitWallet`, {
-          customer_data: {
-            customer_id: self.currentUser.id,
-            amount: self.totalBillingAmount,
-          },
-        })
-        .then(({ data }) => {
-          this.AddOrder();
-          // Swal.fire(
-          //   "Order Accepted",
-          //   "Transaction complete!",
-          //   "success"
-          // ).then(() => {
-          //   window.location.reload();
-          // });
-        })
-        .catch((resp) => {
-          console.error(resp);
-        });
-      // })
-      // .catch((resp) => {
-      //   console.error(resp);
-      //   Swal.fire({
-      //     title: "Error!",
-      //     text: "Couldn't reject the order. Please try again later.",
-      //     icon: "warning",
-      //     confirmButtonText: "Close",
-      //   });
-      // });
+        // .post(`/orders/setThirdPartyOrderStatus`, postData)
+        // .then(({ data }) => {
+          axios
+            .post(`/customerWallet/debitWallet`, {
+              customer_data: {
+                customer_id: self.currentUser.id,
+                amount: self.totalBillingAmount,
+              },
+            })
+            .then(({ data }) => {
+             this.AddOrder();
+              // Swal.fire(
+              //   "Order Accepted",
+              //   "Transaction complete!",
+              //   "success"
+              // ).then(() => {
+              //   window.location.reload();
+              // });
+            })
+            .catch((resp) => {
+              console.error(resp);
+            });
+        // })
+        // .catch((resp) => {
+        //   console.error(resp);
+        //   Swal.fire({
+        //     title: "Error!",
+        //     text: "Couldn't reject the order. Please try again later.",
+        //     icon: "warning",
+        //     confirmButtonText: "Close",
+        //   });
+        // });
     },
     addAmount() {
       let amount = parseInt(this.walletAmount) * 100;
@@ -1164,7 +982,7 @@ export default {
     hideModal() {
       this.$bvModal.hide("order-now");
       this.fullName = "";
-      (this.savedShipAddress = false), (this.shippingType = null);
+      this.shippingType = null;
       this.state = "Select state";
       this.address1 = "";
       this.address2 = "";
@@ -1179,6 +997,7 @@ export default {
       this.company = null;
       this.expectedDelivery = "";
 
+      
       this.fullNameErr= "";
       this.address1Err= "";
       this.phoneErr= "";
@@ -1233,57 +1052,85 @@ export default {
     //   });
     //   // this.$bvModal.hide("order-now");
     // },
-    AddOrder() {
+    async AddOrder() {
       // const visitor_id = Math.floor(Math.random() * 90000) + 10000;
-
+      var designId=""
+     await axios.post('/fabricDesigns/addDesign' ,{
+        "data": {
+        "productId": this.product._id,
+        "customerId": this.currentUser.id,
+        "color": this.product.color,
+        "side": this.product.side,
+        "data": this.product.data,
+        "url": '',
+        "imgUrl": `https://api.theprintribe.com/${this.product.img}`,
+        "imgsArr": this.product.imgsArr,
+        "savedImgsInfo": this.product.savedImgsInfo,
+        "textDesign": this.product.textDesign
+    } 
+      }, {
+        "Content-Type": "application/json",
+      }).then(({data})=>{
+        console.log(data.data._id,"dataa",data.data)
+        designId=data.data._id
+      })
+      console.log(designId,"designid")
+        const ProductInfo={
+            product_id: this.product._id,
+            title: this.product.name,
+            description: this.product.description,
+            price: this.product.price,
+            productsize: this.product.size,
+            productcolor: this.product.color.color_name,
+            product_img: `https://api.theprintribe.com/${this.product.img}`,
+            category_id: this.product.category_id,
+            quantity: String(this.product.quantity),
+            designID: designId,
+            zakeke_price: "0",
+            retail_price:this.product.retail_price,
+            handling_gst:this.product.handling_gst,
+            design_gst:this.product.design_gst
+        }
       const payData = {
         orderData: {
           customerShipping_id: this.shippingData._id,
-          product_info: [this.product],
+          product_info: [ProductInfo],
           total_quantity: String(this.quantity),
           total_price: this.totalBillingAmount,
           shipping_charges: String(this.retailPrice),
           payment_type: "Wallet",
-          design_gst: this.orderData.design_gst,
-          // design_gst:data.orderData.design_gst,
-          retail_price: this.retail,
+          retail_price:this.retail,
+          design_gst: this.design_gst,
+          gst_details:this.gst_details,
           payment_ref_id: "23451AAX",
-          customer_email: this.orderData.customer_email,
+          customer_email: this.currentUser.email,
           visitor_id: this.visitorId,
           courier_id: this.courierId,
           shipping_type: this.shippingType,
           customer_id: this.shippingData.customer_id,
-          gst_details: this.gst_details,
           design_price: this.orderData.design_price,
         },
       };
-     const payload={
-        "data": {
-          gst:this.gst
-        }
-      }
-      axios.put('https://api.theprintribe.com/api/customers/updatecustomer?id='+this.currentUser.id, payload, {
-          "Content-Type": "application/json",
-        })
-      axios
-        .post("https://api.theprintribe.com/api/orders/addOrder", payData, {
-          "Content-Type": "application/json",
-        })
-        .then(() => {
-          Swal.fire("Order Accepted", "Transaction complete!", "success").then(
-            () => {
-              this.$bvModal.hide("order-now");
-              this.$bvModal.hide("billing-modal");
-            }
-          );
-        });
+      axios.post("https://api.theprintribe.com/api/orders/addOrder", payData, {
+        "Content-Type": "application/json",
+      }).then(()=>{
+        Swal.fire(
+                  "Order Accepted",
+                  "Transaction complete!",
+                  "success"
+                ).then(()=>{
+                  this.$bvModal.hide("order-now");
+                })
+      });
     },
     showDesignImages(index) {
       this.$bvModal.show("designImg-modal");
       this.frontDesignImg = this.list[index].design_url;
     },
     showOrderNow(item) {
-      console.log(item,"item")
+      console.log(this.currentUser,"current")
+
+      console.log(item,"items")
       this.product = item;
       this.$bvModal.show("order-now");
     },
@@ -1294,13 +1141,6 @@ export default {
 };
 </script>
 <style scoped>
-.product-price-title,.design-price-title, .shipping-price-title,.total-price-title{
-font-size: 20;
-font-weight: bold;
-}
-.product-price-list,.design-price-list,.shipping-price-list{
-border-bottom: 1px solid gray;
-}
 .select {
   width: 100%;
   height: calc(1.5em + 1.3rem + 2px);

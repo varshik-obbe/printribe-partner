@@ -53,7 +53,7 @@
       >
         <a :href="href" class="menu-link" @click="navigate">
           <i class="menu-icon fas fa-shopping-bag"></i>
-          <span class="menu-text">Orders</span>
+          <span class="menu-text">Ongoing Orders</span>
         </a>
       </li>
     </router-link>
@@ -73,7 +73,7 @@
       >
         <a :href="href" class="menu-link" @click="navigate">
           <i class="menu-icon fas fa-luggage-cart"></i>
-          <span class="menu-text">Other Orders</span>
+          <span class="menu-text">Completed Orders</span>
         </a>
       </li>
     </router-link>
@@ -172,10 +172,67 @@
         </a>
       </li>
     </router-link>
-    <router-link
-      to="/products/my-products"
+    <li
+      aria-haspopup="true"
+      data-menu-toggle="hover"
+      class="menu-item menu-item-submenu"
+      v-bind:class="{ 'menu-item-open': hasActiveChildren('/products') }"
+    >
+      <a href="#" class="menu-link menu-toggle">
+        <i class="menu-icon fas fa-tshirt"></i>
+        <span class="menu-text">Products</span>
+        <i class="menu-arrow"></i>
+      </a>
+      <div class="menu-submenu">
+        <span class="menu-arrow"></span>
+        <ul class="menu-subnav">
+          <router-link
+            to="/products/my-products"
+            v-slot="{ href, navigate, isActive, isExactActive }"
+          >
+            <li
+              aria-haspopup="true"
+              data-menu-toggle="hover"
+              class="menu-item"
+              :class="[
+                isActive && 'menu-item-active',
+                isExactActive && 'menu-item-active',
+              ]"
+            >
+            <a :href="href" class="menu-link" @click="navigate">
+          <i class="menu-icon fas fa-tshirt"></i>
+          <span class="menu-text">My Products</span>
+        </a>
+            </li>
+          </router-link>
+          <router-link
+            to="/products/saved-products"
+            v-slot="{ href, navigate, isActive, isExactActive }"
+          >
+            <li
+              aria-haspopup="true"
+              data-menu-toggle="hover"
+              class="menu-item"
+              :class="[
+                isActive && 'menu-item-active',
+                isExactActive && 'menu-item-active',
+              ]"
+            >
+            <a :href="href" class="menu-link" @click="navigate">
+          <i class="menu-icon fas fa-tshirt"></i>
+          <span class="menu-text">Saved Products</span>
+        </a>
+            </li>
+          </router-link>
+         
+        </ul>
+      </div>
+    </li>
+    <!-- <router-link
+      to="/products"
       v-slot="{ href, navigate, isActive, isExactActive }"
     >
+    
       <li
         aria-haspopup="true"
         data-menu-toggle="hover"
@@ -190,7 +247,7 @@
           <span class="menu-text">My Products</span>
         </a>
       </li>
-    </router-link>
+    </router-link> -->
     <router-link
       to="/add-product"
       v-slot="{ href, navigate, isActive, isExactActive }"

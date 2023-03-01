@@ -627,6 +627,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 export default {
   name: "widget-2",
+ 
   data() {
     return {
       list: [],
@@ -639,11 +640,15 @@ export default {
     };
   },
   created() {
+    console.log(this.dashboard,"dashboard")
     axios
       .get(`/orders/getCustomerOngoingOrders/${this.currentUser.id}`)
       .then(({ data }) => {
         // console.log(data);
-        this.list = data.orders;
+        
+          this.list = data.orders;
+
+        
       })
       .catch((resp) => {
         console.log(resp);
