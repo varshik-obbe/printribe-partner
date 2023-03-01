@@ -75,6 +75,10 @@ export default new Router({
           path: "/products/my-products",
           name: "products",
           component: () => import("@/view/pages/Products.vue")
+        },{
+          path: "/products/saved-products",
+          name: "products",
+          component: () => import("@/view/pages/SavedProducts.vue")
         },
         {
           path: "/add-product",
