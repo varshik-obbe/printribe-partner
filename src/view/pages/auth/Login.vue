@@ -97,7 +97,7 @@
           "
         >
           <a
-            href="#"
+            href="https://theprintribe.com/forgotpassword"
             class="text-dark-60 text-hover-primary my-3 mr-2"
             id="kt_login_forgot"
           >
