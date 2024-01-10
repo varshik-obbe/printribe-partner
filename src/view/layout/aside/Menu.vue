@@ -407,6 +407,7 @@ export default {
       ({ data }) => {
         // console.log(data);
         this.custData = data.customerRecordData;
+        localStorage.setItem('shopify_store', this.custData.shopify_store)
       }
     );
   },

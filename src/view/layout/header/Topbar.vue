@@ -101,36 +101,22 @@
 
     <!-- wallet::start -->
 
-    <div
-      class="topbar-item"
-      @mouseover="onOverWallet"
-      @mouseleave="onLeaveWallet"
-    >
-      <b-dropdown
-        size="sm"
-        variant="link"
-        toggle-class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1 text-decoration-none"
-        no-caret
-        right
-        no-flip
-        ref="walletDropdown"
-      >
+    <div class="topbar-item" @mouseover="onOverWallet" @mouseleave="onLeaveWallet">
+      <b-dropdown size="sm" variant="link"
+        toggle-class="btn btn-icon btn-clean btn-dropdown btn-lg mr-1 text-decoration-none" no-caret right no-flip
+        ref="walletDropdown">
         <template v-slot:button-content>
           <i class="fas fa-wallet text-dark"></i>
         </template>
         <b-dropdown-text tag="div" class="min-w-md-175px">
-          <div
-            class="
+          <div class="
               p-4
               d-flex
               flex-column
               justify-content-evenly
               align-items-center
-            "
-          >
-            <span v-if="walletData" class="mb-4 h3"
-              >₹{{ walletData.amount }}</span
-            >
+            ">
+            <span v-if="walletData" class="mb-4 h3">₹{{ walletData.amount }}</span>
             <div class="btn btn-primary" v-b-modal.add-amount-modal>
               Add amount
             </div>
@@ -140,13 +126,7 @@
     </div>
 
     <!-- add amount modal::begin -->
-    <b-modal
-      id="add-amount-modal"
-      centered
-      hide-footer
-      size="lg"
-      title="Add Amount"
-    >
+    <b-modal id="add-amount-modal" centered hide-footer size="lg" title="Add Amount">
       <b-input-group class="mt-3">
         <template #prepend>
           <b-input-group-text>
@@ -173,6 +153,7 @@
 .topbar {
   .dropdown-toggle {
     padding: 0;
+
     &:hover {
       text-decoration: none;
     }
@@ -188,6 +169,7 @@
     margin: 0;
     padding: 0;
     outline: none;
+
     .b-dropdown-text {
       padding: 0;
     }
@@ -228,6 +210,9 @@ export default {
   created() {
     this.getWalletAmount();
   },
+  computed: {
+    ...mapGetters(["currentUser"]),
+  },
   methods: {
     getWalletAmount() {
       ApiService.get(`/customerWallet/getWalletbyid/${this.currentUser.id}`)
@@ -242,29 +227,48 @@ export default {
     addAmount() {
       let amount = parseInt(this.walletAmount) * 100;
 
+      if (!amount) return;
+
       let data = {
         insdata: {
           customer_id: this.currentUser.id,
           currency: "INR",
-          amount: amount,
-        },
+          amount: amount
+        }
       };
-      ApiService.post(`/customerWallet/razorPayInstantiate`, data)
+
+      ApiService.post(`https://api.theprintribe.com/api/customerWallet/ccAvenueInstantiate`, data)
         .then(({ data }) => {
-          // console.log(data);
-          this.razorPayInitData = data.savedhistoryData;
-          this.razorPayCheckout();
-        })
+            const windowFeatures = 'width=1920,height=1080';
+            window.open(`https://api.theprintribe.com/CCAvenueForm?order_id=${data?.savedhistoryData?.payment_order_id}&amount=${amount}`, '_blank', windowFeatures);
+          })
         .catch((resp) => {
-          this.$bvModal.hide("add-amount-modal");
-          console.log(resp);
           Swal.fire({
             title: "Error!",
-            text: "Some error occurred while adding amount. Please try again later.",
+            text: "Error adding amount to wallet. Please contact support for help",
             icon: "error",
             confirmButtonText: "Close",
-          });
-        });
+          })
+        })
+
+
+
+      // ApiService.post(`/customerWallet/razorPayInstantiate`, data)
+      //   .then(({ data }) => {
+      //     // console.log(data);
+      //     this.razorPayInitData = data.savedhistoryData;
+      //     this.razorPayCheckout();
+      //   })
+      //   .catch((resp) => {
+      //     this.$bvModal.hide("add-amount-modal");
+      //     console.log(resp);
+      //     Swal.fire({
+      //       title: "Error!",
+      //       text: "Some error occurred while adding amount. Please try again later.",
+      //       icon: "error",
+      //       confirmButtonText: "Close",
+      //     });
+      //   });
     },
     razorPayCheckout() {
       let self = this;
