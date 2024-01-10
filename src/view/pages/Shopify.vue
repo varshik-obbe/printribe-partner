@@ -37,8 +37,9 @@ export default {
     },
     mounted() {
         this.storeId = localStorage.getItem('shopify_store');
-        if (this.storeId && this.storeId === '')
+        if (this.storeId === null || this.storeId === ''){
             this.showButton = true
+        }
     },
     methods: {
         addStore() {
